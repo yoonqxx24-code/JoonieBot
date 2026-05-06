@@ -54,7 +54,7 @@ async function saveJsonOrRemote(file, data) { const BIN_KEY = process.env.JSONBI
 
 // immer lokal speichern fs.writeFileSync(file, JSON.stringify(data, null, 2)); if (!BIN_KEY || !BIN_ID) return;
 
-try { let current = {}; try { const res = await axios.get(https://api.jsonbin.io/v3/b/${BIN_ID}/latest, { headers: { 'X-Master-Key': BIN_KEY } }); current = res.data.record || {}; } catch { current = {}; }
+try { let current = {}; try { const res = await axios.get(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': BIN_KEY } }); current = res.data.record || {}; } catch { current = {}; }
 
 if (file === USERS_FILE) current.users = data;
 else if (file === USER_CARDS_FILE) current.user_cards = data;
