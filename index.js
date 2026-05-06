@@ -719,22 +719,44 @@ if (category !== 'regular') {
       const image = imgAtt.url; // Discord CDN URL
 
       if (!ID_REGEX.test(cardId)) {
-        return i.reply({
-          embeds: [ruiEmbed('Invalid card_id',
-            'Use **{R}{GG}{II}V{V}{EE}** (ALL CAPS)\nR=C/R/S/U/L/ES/EL · GG=Group(2) · II=Idol(2) · V=1..∞ · EE=01..99'
-          )],
-          ephemeral: true
-        });
-      }
+  return i.reply({
+    embeds: [ruiEmbed(
+      'Invalid card_id',
+      'Use valid prefixes:\nC/R/S/U/L = Regular rarities\nHB = Birthday\nB = Booster\nP = Patreon\nLE = Limited'
+    )],
+    ephemeral: true
+  });
+}
 
-      // Rarity prefix vs selected rarity
-      const expected = rarityLetterMap[rarity] || 'C';
-      const prefix = (cardId.startsWith('ES') || cardId.startsWith('EL')) ? cardId.slice(0, 2) : cardId.slice(0, 1);
-      if (prefix !== expected) {
-        return i.reply({
-          embeds: [ruiEmbed('Rarity mismatch', `ID starts with **${prefix}**, but rarity is **${rarity}** (expected **${expected}**).`)],
-          ephemeral: true
-        });
+// Prefix check
+const expected = rarityLetterMap[rarity] || 'C';
+
+const prefix =
+  cardId.startsWith('HB') ? 'HB' :
+  cardId.startsWith('LE') ? 'LE' :
+  cardId.startsWith('B') ? 'B' :
+  cardId.startsWith('P') ? 'P' :
+  cardId.charAt(0);
+
+if (prefix !== expected) {
+  return i.reply({
+    embeds: [ruiEmbed(
+      const newCard = {
+  id: cardId,
+  group,
+  member: idol,
+  era,
+  version,
+  image,
+  rarity,
+  category,
+  droppable
+};
+
+cards.push(newCard);
+    ephemeral: true
+  });
+}
       }
 
       const cards = await loadJsonOrRemote(CARDS_FILE, []);
