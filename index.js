@@ -943,8 +943,11 @@ if (i.commandName === 'drop') {
         const COOLDOWN = 60 * 1000;
         if (diff < COOLDOWN) {
           const left = Math.ceil((COOLDOWN - diff) / 1000);
-);
-
+          return i.reply({
+  embeds: [ruiEmbed('Cooldown', `You can drop again in **${left}** seconds.`)],
+  ephemeral: true
+});
+        }
       const boostType = getActiveBoost(u);
       const pulled = [];
       for (let n = 0; n < 3; n++) {
