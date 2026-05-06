@@ -3,13 +3,36 @@ require('dotenv').config(); const fs = require('fs'); const path = require('path
 // === HELPER: createDropCollage === async function createDropCollage(cards) { const width = 1100; const height = 450; const canvas = createCanvas(width, height); const ctx = canvas.getContext('2d');
 
 // Hintergrund ctx.fillStyle = "#1f1f1f"; ctx.fillRect(0, 0, width, height);
+async function createDropCollage(cards) {
+  const width = 1100;
+  const height = 450;
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext('2d');
 
-const positions = [ { x: 50, y: 25 }, { x: 400, y: 25 }, { x: 750, y: 25 } ];
+  ctx.fillStyle = "#1f1f1f";
+  ctx.fillRect(0, 0, width, height);
 
-for (let n = 0; n < cards.length; n++) { const card = cards[n]; try { const img = await loadImage(card.image); const pos = positions[n]; ctx.drawImage(img, pos.x, pos.y, 300, 400); } catch (err) { console.error("Failed loading an image:", err); } }
+  const positions = [
+    { x: 50, y: 25 },
+    { x: 400, y: 25 },
+    { x: 750, y: 25 }
+  ];
 
-return canvas.toBuffer("image/png"); }
+  for (let n = 0; n < cards.length; n++) {
+    const card = cards[n];
 
+    try {
+      const img = await loadImage(card.image);
+      const pos = positions[n];
+
+      ctx.drawImage(img, pos.x, pos.y, 300, 400);
+    } catch (err) {
+      console.error("Failed loading an image:", err);
+    }
+  }
+
+  return canvas.toBuffer("image/png");
+}
 // Discord client const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 // Dateien (lokales Backup) const USERS_FILE = path.join(__dirname, 'users.json'); const USER_CARDS_FILE = path.join(__dirname, 'user_cards.json'); const CARDS_FILE = path.join(__dirname, 'cards.json');
