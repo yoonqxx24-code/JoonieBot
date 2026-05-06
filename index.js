@@ -218,42 +218,41 @@ async function registerCommands() {
       .addStringOption(o => o.setName('card_id').setDescription('Card ID (ALL CAPS)').setRequired(false)),
 
     new SlashCommandBuilder()
-      .setName('addcard')
-      .setDescription('STAFF ONLY – create a new card')
-      .addStringOption(o =>
-        o.setName('card_id')
-          .setDescription('Card ID (ALL CAPS, format: {R}{GG}{II}V{V}{EE})')
-          .setRequired(true)
-      )
-      .addStringOption(o => o.setName('group').setDescription('Group name').setRequired(true))
-      .addStringOption(o => o.setName('idol').setDescription('Idol name').setRequired(true))
-      .addStringOption(o =>
-  o.setName('category').setDescription('Card category').setRequired(true).addChoices(
-    { name: 'Regular', value: 'regular' },
-    { name: 'Happy Birthday', value: 'birthday' },
-    { name: 'Booster', value: 'booster' },
-    { name: 'Patreon', value: 'patreon' },
-    { name: 'Limited', value: 'limited'}
+  .setName('addcard')
+  .setDescription('STAFF ONLY – create a new card')
+  .addStringOption(o =>
+    o.setName('card_id')
+      .setDescription('Card ID (ALL CAPS)')
+      .setRequired(true)
   )
-)
-.addStringOption(o =>
-  o.setName('rarity').setDescription('Only needed for Regular cards').setRequired(false).addChoices(
-    { name: 'common', value: 'common' },
-    { name: 'rare', value: 'rare' },
-    { name: 'super_rare', value: 'super_rare' },
-    { name: 'ultra_rare', value: 'ultra_rare' },
-    { name: 'legendary', value: 'legendary' }
+  .addStringOption(o => o.setName('group').setDescription('Group name').setRequired(true))
+  .addStringOption(o => o.setName('idol').setDescription('Idol name').setRequired(true))
+  .addStringOption(o =>
+    o.setName('category').setDescription('Card category').setRequired(true).addChoices(
+      { name: 'Regular', value: 'regular' },
+      { name: 'Happy Birthday', value: 'birthday' },
+      { name: 'Limited', value: 'limited' },
+      { name: 'Booster', value: 'booster' },
+      { name: 'Patreon', value: 'patreon' }
+    )
   )
-)
-      .addStringOption(o => o.setName('era').setDescription('Era name (e.g. Bloom)').setRequired(true))
-      .addStringOption(o => o.setName('version').setDescription('Version number (1, 2, 3...)').setRequired(true))
-      .addAttachmentOption(o =>
-        o.setName('image').setDescription('Upload card image (PNG/JPG/WebP)').setRequired(true)
-      )
-      .addBooleanOption(o =>
-        o.setName('droppable').setDescription('Should drop in /drop').setRequired(true)
-      ),
-
+  .addStringOption(o => o.setName('era').setDescription('Era name').setRequired(true))
+  .addStringOption(o => o.setName('version').setDescription('Version number').setRequired(true))
+  .addAttachmentOption(o =>
+    o.setName('image').setDescription('Upload card image').setRequired(true)
+  )
+  .addBooleanOption(o =>
+    o.setName('droppable').setDescription('Should drop in /drop').setRequired(true)
+  )
+  .addStringOption(o =>
+    o.setName('rarity').setDescription('Only needed for Regular cards').setRequired(false).addChoices(
+      { name: 'common', value: 'common' },
+      { name: 'rare', value: 'rare' },
+      { name: 'super_rare', value: 'super_rare' },
+      { name: 'ultra_rare', value: 'ultra_rare' },
+      { name: 'legendary', value: 'legendary' }
+    )
+  ),
     // neue Staff-Commands
     new SlashCommandBuilder()
       .setName('editcard_dropon')
