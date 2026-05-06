@@ -980,12 +980,10 @@ const finalPool = pool.length
       });
         }
   catch (err) {
-    console.error(err);
-    if (i.replied || i.deferred) return;
-    return i.reply({ embeds: [ruiEmbed('Error', 'Something went wrong')] });
-  }
-);
-
+  console.error(err);
+  if (i.replied || i.deferred) return;
+  return i.reply({ embeds: [ruiEmbed('Error', 'Something went wrong')] });
+      }
 /* ----------------------------------------------------
    Render keep-alive
 ---------------------------------------------------- */
