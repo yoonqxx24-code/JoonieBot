@@ -779,7 +779,7 @@ if (prefix !== expected) {
       return i.reply({ embeds: [ruiEmbed('Card created',
         `New card was added.\nID: **${cardId}**\nGroup: **${group}**\nIdol: **${idol}**\nRarity: **${rarity}**\nType: **${ctype}**\nDroppable: **${droppable ? 'yes' : 'no'}**\nEra: **${era || '—'}**\nVersion: **${version || '—'}**`
       )] });
-    }
+    
 
     /* /editcard_dropon (STAFF) */
     if (i.commandName === 'editcard_dropon') {
