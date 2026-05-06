@@ -943,8 +943,6 @@ if (i.commandName === 'drop') {
         const COOLDOWN = 60 * 1000;
         if (diff < COOLDOWN) {
           const left = Math.ceil((COOLDOWN - diff) / 1000);
-          const pool = cards.filter(
-  c => c.rarity === rarity && isDroppable(c)
 );
 
       const boostType = getActiveBoost(u);
@@ -979,11 +977,7 @@ const finalPool = pool.length
         components: [row]
       });
         }
-  catch (err) {
-  console.error(err);
-  if (i.replied || i.deferred) return;
-  return i.reply({ embeds: [ruiEmbed('Error', 'Something went wrong')] });
-      }
+  
 /* ----------------------------------------------------
    Render keep-alive
 ---------------------------------------------------- */
