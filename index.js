@@ -978,7 +978,7 @@ const finalPool = pool.length
         files: [{ attachment: imageBuffer, name: 'drop.png' }],
         components: [row]
       });
-
+        }
   catch (err) {
     console.error(err);
     if (i.replied || i.deferred) return;
