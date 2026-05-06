@@ -228,23 +228,23 @@ async function registerCommands() {
       .addStringOption(o => o.setName('group').setDescription('Group name').setRequired(true))
       .addStringOption(o => o.setName('idol').setDescription('Idol name').setRequired(true))
       .addStringOption(o =>
-        o.setName('rarity').setDescription('Rarity').setRequired(true).addChoices(
-          { name: 'common', value: 'common' },
-          { name: 'rare', value: 'rare' },
-          { name: 'super_rare', value: 'super_rare' },
-          { name: 'ultra_rare', value: 'ultra_rare' },
-          { name: 'legendary', value: 'legendary' },
-          { name: 'event', value: 'event' },
-          { name: 'limited', value: 'limited' }
-        )
-      )
-      .addStringOption(o =>
-        o.setName('type').setDescription('Type (reg, event, limited)').setRequired(true).addChoices(
-          { name: 'Regular', value: 'reg' },
-          { name: 'Event', value: 'event' },
-          { name: 'Limited', value: 'limited' }
-        )
-      )
+  o.setName('category').setDescription('Card category').setRequired(true).addChoices(
+    { name: 'Regular', value: 'regular' },
+    { name: 'Happy Birthday', value: 'birthday' },
+    { name: 'Booster', value: 'booster' },
+    { name: 'Patreon', value: 'patreon' },
+    { name: 'Limited', value: 'limited'}
+  )
+)
+.addStringOption(o =>
+  o.setName('rarity').setDescription('Only needed for Regular cards').setRequired(false).addChoices(
+    { name: 'common', value: 'common' },
+    { name: 'rare', value: 'rare' },
+    { name: 'super_rare', value: 'super_rare' },
+    { name: 'ultra_rare', value: 'ultra_rare' },
+    { name: 'legendary', value: 'legendary' }
+  )
+)
       .addStringOption(o => o.setName('era').setDescription('Era name (e.g. Bloom)').setRequired(true))
       .addStringOption(o => o.setName('version').setDescription('Version number (1, 2, 3...)').setRequired(true))
       .addAttachmentOption(o =>
@@ -673,13 +673,28 @@ if (i.commandName === 'inventory') {
       const cardIdRaw = i.options.getString('card_id') || '';
       const cardId = cardIdRaw.toUpperCase();
 
-      const rarity  = i.options.getString('rarity');
-      const group   = i.options.getString('group');
-      const idol    = i.options.getString('idol');
-      const era     = i.options.getString('era') || null;
-      const version = i.options.getString('version') || null;
-      const ctype   = i.options.getString('type');
-      const droppable = i.options.getBoolean('droppable');
+      let rarity = i.options.getString('rarity');
+const category = i.options.getString('category');
+const group = i.options.getString('group');
+const idol = i.options.getString('idol');
+const era = i.options.getString('era') || null;
+const version = i.options.getString('version') || null;
+let droppable = i.options.getBoolean('droppable');
+
+if (category === 'booster' || category === 'patreon') {
+  droppable = false;
+}
+
+if (category === 'regular' && !rarity) {
+  return i.reply({
+    embeds: [ruiEmbed('Missing rarity', 'Regular cards need a rarity.')],
+    ephemeral: true
+  });
+}
+
+if (category !== 'regular') {
+  rarity = category;
+}
 
       // Bild-Upload (erforderlich)
       const imgAtt = i.options.getAttachment('image');
