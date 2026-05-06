@@ -947,14 +947,6 @@ if (i.commandName === 'drop') {
   c => c.rarity === rarity && isDroppable(c)
 );
 
-const finalPool = pool.length
-  ? pool
-  : cards.filter(
-      c => c.rarity === 'common' && isDroppable(c)
-    );
-        }
-      }
-
       const boostType = getActiveBoost(u);
       const pulled = [];
       for (let n = 0; n < 3; n++) {
