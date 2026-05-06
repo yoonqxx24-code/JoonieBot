@@ -748,7 +748,7 @@ const prefix =
   cardId.startsWith('P') ? 'P' :
   cardId.charAt(0);
 
-iif (prefix !== expected) {
+if (prefix !== expected) {
   return i.reply({
     embeds: [ruiEmbed(
       'Rarity mismatch',
