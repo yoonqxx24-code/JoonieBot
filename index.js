@@ -979,7 +979,7 @@ const finalPool = pool.length
         components: [row]
       });
 
-  } catch (err) {
+  catch (err) {
     console.error(err);
     if (i.replied || i.deferred) return;
     return i.reply({ embeds: [ruiEmbed('Error', 'Something went wrong')] });
