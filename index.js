@@ -879,8 +879,16 @@ cards.push(newCard);
         return i.reply({ embeds: [ruiEmbed('Cooldown', `Please wait **${left} seconds** before claiming again.`)], ephemeral: true });
       }
 
-      const pool = cards.filter(c => c.droppable !== false && c.type !== 'event' && c.type !== 'limited');
-      const chosen = pool[Math.floor(Math.random() * pool.length)];
+      const pool = cards.filter(isDroppable);
+
+if (!pool.length) {
+  return i.reply({
+    embeds: [ruiEmbed('No droppable cards', 'There are no droppable cards available right now.')],
+    ephemeral: true
+  });
+}
+
+const chosen = pool[Math.floor(Math.random() * pool.length)];
 
       const allUserCards = await loadJsonOrRemote(USER_CARDS_FILE, {});
       if (!Array.isArray(allUserCards[id])) allUserCards[id] = [];
@@ -900,7 +908,18 @@ cards.push(newCard);
     }
 
 /* /drop */
-    if (i.commandName === 'drop') {
+  function isDroppable(card) {
+  if (!card) return false;
+
+  const category = card.category || 'regular';
+
+  if (category === 'booster' || category === 'patreon') {
+    return false;
+  }
+
+  return card.droppable !== false;
+  }
+if (i.commandName === 'drop') {
       const cards = await loadJsonOrRemote(CARDS_FILE, []);
       if (!cards.length) {
         return i.reply({
@@ -916,10 +935,15 @@ cards.push(newCard);
         const COOLDOWN = 60 * 1000;
         if (diff < COOLDOWN) {
           const left = Math.ceil((COOLDOWN - diff) / 1000);
-          return i.reply({
-            embeds: [ruiEmbed('Cooldown', `You can drop again in **${left}** seconds.`)],
-            ephemeral: true
-          });
+          const pool = cards.filter(
+  c => c.rarity === rarity && isDroppable(c)
+);
+
+const finalPool = pool.length
+  ? pool
+  : cards.filter(
+      c => c.rarity === 'common' && isDroppable(c)
+    );
         }
       }
 
@@ -927,7 +951,10 @@ cards.push(newCard);
       const pulled = [];
       for (let n = 0; n < 3; n++) {
         const rarity = pickRarityWithBoost(BASE_RARITY_WEIGHTS, boostType);
-        const pool = cards.filter(c => c.rarity === rarity && c.droppable !== false);
+        const pool = cards.filter(c => c.rarity === rarity && isDroppable(c));
+const finalPool = pool.length
+  ? pool
+  : cards.filter(c => c.rarity === 'common' && isDroppable(c));
         const finalPool = pool.length
           ? pool
           : cards.filter(c => c.rarity === 'common' && c.droppable !== false);
