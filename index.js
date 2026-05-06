@@ -86,7 +86,7 @@ function pickRarityWithBoost(baseWeights, boostName = null) { const weights = { 
 
 /* ---------------------------------------------------- Helpers ---------------------------------------------------- */ function ruiEmbed(title, desc, fields = []) { const e = new EmbedBuilder().setTitle(title).setDescription(desc).setColor(0xFFB6C1); if (fields.length) e.addFields(...fields); return e; } function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
-/* ---------------------------------------------------- ID Template (ALL CAPS) Regular: {R}{GG}{II}V{V}{EE} where R=C/R/S/U/L Birthday: HB{GG}{II}V{V}{EE} Booster: B{GG}{II}V{V}{EE} Patreon: P{GG}{II}V{V}{EE} Limited: LE{GG}{II}V{V}{EE} ---------------------------------------------------- / const ID_REGEX = /^(?:C|R|S|U|L|HB|B|P|LE)[A-Z]{2}[A-Z]{2}V([1-9]\d)(0[1-9]|[1-9]\d{0,3})$/;
+/* ---------------------------------------------------- ID Template (ALL CAPS) Regular: {R}{GG}{II}V{V}{EE} where R=C/R/S/U/L Birthday: HB{GG}{II}V{V}{EE} Booster: B{GG}{II}V{V}{EE} Patreon: P{GG}{II}V{V}{EE} Limited: LE{GG}{II}V{V}{EE} ---------------------------------------------------- */ const ID_REGEX = /^(?:C|R|S|U|L|HB|B|P|LE)[A-Z]{2}[A-Z]{2}V([1-9]\d)(0[1-9]|[1-9]\d{0,3})$/;
 
 const rarityLetterMap = { common: 'C', rare: 'R', super_rare: 'S', ultra_rare: 'U', legendary: 'L' };
 
