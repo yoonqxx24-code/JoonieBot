@@ -171,12 +171,23 @@ function ruiEmbed(title, desc, fields = []) {
 function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
 /* ----------------------------------------------------
-   ID Template (ALL CAPS, inkl. ES/EL)
-   {R}{GG}{II}V{V}{EE}
+   ID Template
+   {CATEGORY/RARITY}{GG}{II}V{V}{EE}
 ---------------------------------------------------- */
-const ID_REGEX = /^(?:C|R|S|U|L|ES|EL)[A-Z]{2}[A-Z]{2}V([1-9]\d*)(0[1-9]|[1-9]\d)$/;
+
+const ID_REGEX = /^(?:C|R|S|U|L|HB|B|P|LE)[A-Z]{2}[A-Z]{2}V([1-9]\d*)(0[1-9]|[1-9]\d)$/;
+
 const rarityLetterMap = {
-  common: 'C', rare: 'R', super_rare: 'S', ultra_rare: 'U', legendary: 'L', event: 'ES', limited: 'EL'
+  common: 'C',
+  rare: 'R',
+  super_rare: 'S',
+  ultra_rare: 'U',
+  legendary: 'L',
+
+  birthday: 'HB',
+  booster: 'B',
+  patreon: 'P',
+  limited: 'LE'
 };
 
 /* ----------------------------------------------------
