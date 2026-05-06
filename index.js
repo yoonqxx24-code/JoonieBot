@@ -978,7 +978,6 @@ const finalPool = pool.length
         files: [{ attachment: imageBuffer, name: 'drop.png' }],
         components: [row]
       });
-    } // <-- schließt NUR den /drop-Block
 
   } catch (err) {
     console.error(err);
