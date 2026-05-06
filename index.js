@@ -984,7 +984,7 @@ const finalPool = pool.length
     if (i.replied || i.deferred) return;
     return i.reply({ embeds: [ruiEmbed('Error', 'Something went wrong')] });
   }
-});
+);
 
 /* ----------------------------------------------------
    Render keep-alive
