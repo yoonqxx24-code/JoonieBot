@@ -135,7 +135,7 @@ const BOOST_MULTIPLIERS = {
 };
 
 // Kaufpreise (event/limited nicht kaufbar)
-const RARITY_PRICES = { common: 200, rare: 400, super_rare: 650, ultra_rare: 900, legendary: 1200 };
+const RARITY_PRICES = { common: 200, rare: 400, super_rare: 650, ultra_rare: 900};
 
 function getActiveBoost(user) {
   if (!user || !user.activeBoost) return null;
