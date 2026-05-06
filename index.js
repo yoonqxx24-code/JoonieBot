@@ -748,9 +748,20 @@ const prefix =
   cardId.startsWith('P') ? 'P' :
   cardId.charAt(0);
 
-if (prefix !== expected) {
+iif (prefix !== expected) {
   return i.reply({
     embeds: [ruiEmbed(
+      'Rarity mismatch',
+      `ID starts with **${prefix}**, but expected **${expected}** for category/rarity **${rarity}**.`
+    )],
+    ephemeral: true
+  });
+}}
+      const cards = await loadJsonOrRemote(CARDS_FILE, []);
+      if (cards.find(c => c.id === cardId)) {
+        return i.reply({ embeds: [ruiEmbed('Already exists', `There is already a card with ID **${cardId}**.`)], ephemeral: true });
+      }
+
       const newCard = {
   id: cardId,
   group,
@@ -762,19 +773,6 @@ if (prefix !== expected) {
   category,
   droppable
 };
-
-cards.push(newCard);
-    ephemeral: true
-  });
-}
-      }
-
-      const cards = await loadJsonOrRemote(CARDS_FILE, []);
-      if (cards.find(c => c.id === cardId)) {
-        return i.reply({ embeds: [ruiEmbed('Already exists', `There is already a card with ID **${cardId}**.`)], ephemeral: true });
-      }
-
-      const newCard = { id: cardId, group, member: idol, era, version, image, rarity, type: ctype, droppable };
       cards.push(newCard);
       await saveJsonOrRemote(CARDS_FILE, cards);
 
