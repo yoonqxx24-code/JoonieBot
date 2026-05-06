@@ -590,16 +590,26 @@ if (i.commandName === 'inventory') {
         return i.reply({ embeds: [ruiEmbed('Not found', `There is no card with ID **${cardId}**.`)], ephemeral: true });
       }
 
-      const rarity = wanted.rarity || 'common';
+      const category = wanted.category || 'regular';
+const rarity = wanted.rarity || 'common';
 
-      if (rarity === 'event' || rarity === 'limited') {
-        return i.reply({ embeds: [ruiEmbed('Not buyable', `Cards with rarity **${rarity}** cannot be bought. Try drops or events.`)], ephemeral: true });
-      }
+const BUYABLE_RARITIES = ['common', 'rare', 'super_rare', 'ultra_rare'];
 
-      const price = RARITY_PRICES[rarity];
-      if (!price) {
-        return i.reply({ embeds: [ruiEmbed('Not buyable', `Cards with rarity **${rarity}** cannot be bought.`)], ephemeral: true });
-      }
+if (category !== 'regular') {
+  return i.reply({
+    embeds: [ruiEmbed('Not buyable', `Only regular cards can be bought. This card is **${category}**.`)],
+    ephemeral: true
+  });
+}
+
+if (!BUYABLE_RARITIES.includes(rarity)) {
+  return i.reply({
+    embeds: [ruiEmbed('Not buyable', `Cards with rarity **${rarity}** cannot be bought.`)],
+    ephemeral: true
+  });
+}
+
+const price = RARITY_PRICES[rarity];
 
       if (u.coins < price) {
         return i.reply({ embeds: [ruiEmbed('Not enough coins', `This card costs **${price}** 🪙 but you only have **${u.coins}**.`)], ephemeral: true });
