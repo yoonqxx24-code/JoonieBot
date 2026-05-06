@@ -41,7 +41,7 @@ async function createDropCollage(cards) {
 
 if (!BIN_KEY || !BIN_ID) { if (!fs.existsSync(file)) return fallback; try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return fallback; } }
 
-try { const res = await axios.get(https://api.jsonbin.io/v3/b/${BIN_ID}/latest, { headers: { 'X-Master-Key': BIN_KEY } }); const record = res.data.record; if (!record) return fallback;
+try { const res = await axios.get(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': BIN_KEY } }); const record = res.data.record; if (!record) return fallback;
 
 if (file === USERS_FILE) return record.users ?? fallback;
 if (file === USER_CARDS_FILE) return record.user_cards ?? fallback;
