@@ -955,9 +955,7 @@ if (i.commandName === 'drop') {
 const finalPool = pool.length
   ? pool
   : cards.filter(c => c.rarity === 'common' && isDroppable(c));
-        const finalPool = pool.length
-          ? pool
-          : cards.filter(c => c.rarity === 'common' && c.droppable !== false);
+      
         const chosen = finalPool[Math.floor(Math.random() * finalPool.length)];
         pulled.push(chosen);
       }
