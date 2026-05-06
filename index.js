@@ -947,6 +947,7 @@ if (i.commandName === 'drop') {
   embeds: [ruiEmbed('Cooldown', `You can drop again in **${left}** seconds.`)],
   ephemeral: true
 });
+      }
         }
       const boostType = getActiveBoost(u);
       const pulled = [];
