@@ -47,7 +47,7 @@ client.on(Events.InteractionCreate, async (i) => {
         id,
         name,
         coins: 0,
-        butterflies: 0,
+        leaves: 0,
         created: new Date().toISOString(),
         lastDaily: null,
         lastWeekly: null,
@@ -59,7 +59,7 @@ client.on(Events.InteractionCreate, async (i) => {
 
     // /ping
     if (i.commandName === 'ping') {
-      return i.reply({ embeds: [ruiEmbed('Pong', 'Rui is awake.')] });
+      return i.reply({ embeds: [ruiEmbed('Pong', 'Joonie is awake.')] });
     } 
 
     // /start
@@ -71,7 +71,7 @@ client.on(Events.InteractionCreate, async (i) => {
         id,
         name,
         coins: 0,
-        butterflies: 0,
+        leaves: 0,
         created: new Date().toISOString(),
         lastDaily: null,
         lastWeekly: null,
