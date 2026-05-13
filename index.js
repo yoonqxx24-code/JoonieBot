@@ -420,7 +420,7 @@ client.on(Events.InteractionCreate, async (i) => {
         return i.reply({ embeds: [ruiEmbed('Already started', `Oh! Seems like you already created a profile, ${name}. Have fun playing.`)] });
       }
       all[id] = {
-        id, name, coins: 0, butterflies: 0, created: new Date().toISOString(),
+        id, name, coins: 0, leaves: 0, created: new Date().toISOString(),
         lastDaily: null, lastWeekly: null, lastMonthly: null, lastWork: null,
         lastDrop: null, pendingDrop: null, lastClaim: null
       };
@@ -434,9 +434,9 @@ client.on(Events.InteractionCreate, async (i) => {
       const myCards = Array.isArray(allUserCards[id]) ? allUserCards[id] : [];
       return i.reply({
         embeds: [ruiEmbed(`${name}'s Balance`, `Here’s your current collector data. Keep playing to get more.`, [
-          { name: '🪙 Coins', value: String(u.coins), inline: true },
-          { name: '🦋 Butterflies', value: String(u.butterflies), inline: true },
-          { name: '✨ Cards', value: String(myCards.length), inline: true }
+          { name: 'Coins', value: String(u.coins), inline: true },
+          { name: 'Leaves', value: String(u.leaves), inline: true },
+          { name: 'Cards', value: String(myCards.length), inline: true }
         ])]
       });
     }
@@ -453,15 +453,15 @@ client.on(Events.InteractionCreate, async (i) => {
       }
 
       const coins = rand(200, 750);
-      const butterflies = rand(3, 20);
-      u.coins += coins; u.butterflies += butterflies; u.lastDaily = new Date().toISOString();
+      const leaves = rand(3, 7);
+      u.coins += coins; u.leaves += leaves; u.lastDaily = new Date().toISOString();
       await saveJsonOrRemote(USERS_FILE, users);
 
       return i.reply({ embeds: [ruiEmbed('Daily collected', `${name}, here is what I found for you today.`, [
-        { name: '🪙 Coins', value: `+${coins}`, inline: true },
-        { name: '🦋 Butterflies', value: `+${butterflies}`, inline: true },
-        { name: '✨ Cards', value: 'No cards available yet', inline: false },
-        { name: 'New total', value: `${u.coins} 🪙 / ${u.butterflies} 🦋`, inline: false }
+        { name: 'Coins', value: `+${coins}`, inline: true },
+        { name: 'Leaves', value: `+${leaves}`, inline: true },
+        { name: 'Cards', value: 'No cards available yet', inline: false },
+        { name: 'New total', value: `${u.coins} / ${u.leaves}`, inline: false }
       ])] });
     }
 
@@ -477,15 +477,15 @@ client.on(Events.InteractionCreate, async (i) => {
       }
 
       const coins = rand(900, 1800);
-      const butterflies = rand(10, 35);
-      u.coins += coins; u.butterflies += butterflies; u.lastWeekly = new Date().toISOString();
+      const leaves = rand(10, 15);
+      u.coins += coins; u.leaves += leaves; u.lastWeekly = new Date().toISOString();
       await saveJsonOrRemote(USERS_FILE, users);
 
       return i.reply({ embeds: [ruiEmbed('Weekly collected', `Weekly rewards for ${name}.`, [
-        { name: '🪙 Coins', value: `+${coins}`, inline: true },
-        { name: '🦋 Butterflies', value: `+${butterflies}`, inline: true },
-        { name: '✨ Cards', value: 'No cards available yet', inline: false },
-        { name: 'New total', value: `${u.coins} 🪙 / ${u.butterflies} 🦋`, inline: false }
+        { name: 'Coins', value: `+${coins}`, inline: true },
+        { name: 'Leaves', value: `+${leaves}`, inline: true },
+        { name: 'Cards', value: 'No cards available yet', inline: false },
+        { name: 'New total', value: `${u.coins} / ${u.leaves}`, inline: false }
       ])] });
     }
 
@@ -501,15 +501,15 @@ client.on(Events.InteractionCreate, async (i) => {
       }
 
       const coins = rand(2500, 5000);
-      const butterflies = rand(25, 70);
-      u.coins += coins; u.butterflies += butterflies; u.lastMonthly = new Date().toISOString();
+      const leaves = rand(25, 50);
+      u.coins += coins; u.leaves += leaves; u.lastMonthly = new Date().toISOString();
       await saveJsonOrRemote(USERS_FILE, users);
 
       return i.reply({ embeds: [ruiEmbed('Monthly collected', `Big drop for ${name}.`, [
-        { name: '🪙 Coins', value: `+${coins}`, inline: true },
-        { name: '🦋 Butterflies', value: `+${butterflies}`, inline: true },
-        { name: '✨ Cards', value: 'No cards available yet', inline: false },
-        { name: 'New total', value: `${u.coins} 🪙 / ${u.butterflies} 🦋`, inline: false }
+        { name: 'Coins', value: `+${coins}`, inline: true },
+        { name: 'Leaves', value: `+${leaves}`, inline: true },
+        { name: 'Cards', value: 'No cards available yet', inline: false },
+        { name: 'New total', value: `${u.coins}  / ${u.leaves}`, inline: false }
       ])] });
     }
 
@@ -528,10 +528,10 @@ client.on(Events.InteractionCreate, async (i) => {
       const butterflies = rand(3, 20);
       const msg = WORK_MESSAGES[Math.floor(Math.random() * WORK_MESSAGES.length)];
 
-      u.coins += coins; u.butterflies += butterflies; u.lastWork = new Date().toISOString();
+      u.coins += coins; u.leaves += leaves; u.lastWork = new Date().toISOString();
       await saveJsonOrRemote(USERS_FILE, users);
 
-      return i.reply({ embeds: [ruiEmbed('Work complete', `${msg}\nYou earned ${coins} 🪙 and ${butterflies} 🦋.\nNew total: ${u.coins} 🪙 / ${u.butterflies} 🦋.`)] });
+      return i.reply({ embeds: [ruiEmbed('Work complete', `${msg}\nYou earned ${coins} and ${leaves}.\nNew total: ${u.coins} / ${u.leaves}.`)] });
     }
 
     /* /inventory */
