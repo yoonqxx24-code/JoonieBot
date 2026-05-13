@@ -65,7 +65,7 @@ client.on(Events.InteractionCreate, async (i) => {
     // /start
     if (i.commandName === 'start') {
       if (u && u.created) {
-        return i.reply({ embeds: [ruiEmbed('Profile already exists', `Oh! Seems like you already created a profile, ${name}. Have fun playing.`)] });
+        return i.reply({ embeds: [ruiEmbed('Profile already exists', `Oh! Seems like you already created a profile. Have fun playing.`)] });
       }
       users[id] = {
         id,
