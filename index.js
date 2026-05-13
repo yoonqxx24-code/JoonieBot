@@ -623,7 +623,7 @@ const price = RARITY_PRICES[rarity];
       await saveJsonOrRemote(USERS_FILE, users);
       await saveJsonOrRemote(USER_CARDS_FILE, allUserCards);
 
-      return i.reply({ embeds: [ruiEmbed('Card bought', `You bought **${wanted.id}** (${wanted.group} — ${wanted.member}) • **${rarity}** for **${price}** 🪙`)] });
+      return i.reply({ embeds: [ruiEmbed('Card bought', `You bought **${wanted.id}** (${wanted.group} — ${wanted.member}) • **${rarity}** for **${price}**`)] });
     }
 
     /* /gift */
@@ -635,11 +635,11 @@ const price = RARITY_PRICES[rarity];
       const cardId = cardIdInput ? cardIdInput.toUpperCase() : null;
 
       if (!targetUser) return i.reply({ embeds: [ruiEmbed('No target', 'You have to pick someone to gift to.')] });
-      if (targetUser.id === id) return i.reply({ embeds: [ruiEmbed('…No.', 'You can’t gift to yourself 😒')] });
+      if (targetUser.id === id) return i.reply({ embeds: [ruiEmbed('…No.', 'You can’t gift to yourself')] });
 
       if (!users[targetUser.id]) {
         users[targetUser.id] = {
-          id: targetUser.id, name: targetUser.username, coins: 0, butterflies: 0, created: new Date().toISOString(),
+          id: targetUser.id, name: targetUser.username, coins: 0, leaves: 0, created: new Date().toISOString(),
           lastDaily: null, lastWeekly: null, lastMonthly: null, lastWork: null, lastDrop: null, pendingDrop: null, lastClaim: null
         };
       }
@@ -652,11 +652,11 @@ const price = RARITY_PRICES[rarity];
           if (u.coins < amount) return i.reply({ embeds: [ruiEmbed('Not enough', `You only have ${u.coins} coins.`)], ephemeral: true });
           u.coins -= amount; receiver.coins += amount;
         } else {
-          if (u.butterflies < amount) return i.reply({ embeds: [ruiEmbed('Not enough', `You only have ${u.butterflies} butterflies.`)], ephemeral: true });
-          u.butterflies -= amount; receiver.butterflies += amount;
+          if (u.leaves < amount) return i.reply({ embeds: [ruiEmbed('Not enough', `You only have ${u.leaves} leaves.`)], ephemeral: true });
+          u.leaves -= amount; receiver.leaves += amount;
         }
         await saveJsonOrRemote(USERS_FILE, users);
-        return i.reply({ embeds: [ruiEmbed('Gift sent', `${name} sent **${amount}** ${what === 'coins' ? '🪙 coins' : '🦋 butterflies'} to ${targetUser.username}.`)] });
+        return i.reply({ embeds: [ruiEmbed('Gift sent', `${name} sent **${amount}** ${what === 'coins' ? 'coins' : 'leaves'} to ${targetUser.username}.`)] });
       }
 
       if (what === 'card') {
@@ -679,7 +679,7 @@ const price = RARITY_PRICES[rarity];
         return i.reply({ embeds: [ruiEmbed('Card sent', `${name} sent **${cardToSend.id}** (${cardToSend.group} — ${cardToSend.member}) to ${targetUser.username}.`)] });
       }
 
-      return i.reply({ embeds: [ruiEmbed('Unknown thing', 'You can gift `coins`, `butterflies` or `card`.')] });
+      return i.reply({ embeds: [ruiEmbed('Unknown thing', 'You can gift `coins`, `leaves` or `card`.')] });
     }
 
     /* /addcard (STAFF + Template-Check, ALL CAPS + ES/EL, Bild-Datei Pflicht) */
@@ -687,7 +687,7 @@ const price = RARITY_PRICES[rarity];
       const staffEnv = process.env.STAFF_IDS || '';
       const staffList = staffEnv.split(',').map(s => s.trim()).filter(Boolean);
       if (!staffList.includes(i.user.id)) {
-        return i.reply({ embeds: [ruiEmbed('Not allowed', 'This command is for Rui staff only.')], ephemeral: true });
+        return i.reply({ embeds: [ruiEmbed('Not allowed', 'This command is for Joonie staff only.')], ephemeral: true });
       }
 
       const cardIdRaw = i.options.getString('card_id') || '';
@@ -788,7 +788,7 @@ if (prefix !== expected) {
 
       if (!staffList.includes(i.user.id)) {
         return i.reply({
-          embeds: [ruiEmbed('Not allowed', 'This command is for Rui staff only.')],
+          embeds: [ruiEmbed('Not allowed', 'This command is for Joonie staff only.')],
           ephemeral: true
         });
       }
@@ -819,7 +819,7 @@ if (prefix !== expected) {
 
       if (!staffList.includes(i.user.id)) {
         return i.reply({
-          embeds: [ruiEmbed('Not allowed', 'This command is for Rui staff only.')],
+          embeds: [ruiEmbed('Not allowed', 'This command is for Joonie staff only.')],
           ephemeral: true
         });
       }
@@ -976,7 +976,7 @@ const finalPool = pool.length
       );
 
       return i.reply({
-        content: `✨ **${i.user.username} dropped 3 cards!**\nPick your favorite.`,
+        content: `🌱**${i.user.username} dropped 3 cards!**\nPick your favorite.`,
         files: [{ attachment: imageBuffer, name: 'drop.png' }],
         components: [row]
       });
