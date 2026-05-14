@@ -16,6 +16,7 @@ const {
 } = require('discord.js');
 const { createCanvas, loadImage } = require('canvas');
 const axios = require('axios');
+const STAFF_ROLE_ID = process.env.STAFF_ROLE_ID;
 
 // === HELPER: createDropCollage ===
 async function createDropCollage(cards) {
