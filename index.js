@@ -529,7 +529,118 @@ if (u.coins == null || Number.isNaN(u.coins)) u.coins = 0;
         { name: 'New total', value: `${u.coins} 🪙 / ${u.ivy} 🌿`, inline: false }
       ])] });
     }
+/* /progress */
+if (i.commandName === 'progress') {
+  const allCards = await loadJsonOrRemote(CARDS_FILE, []);
+  const allUserCards = await loadJsonOrRemote(USER_CARDS_FILE, {});
 
+  const groupFilter = i.options.getString('group');
+  const idolFilter = i.options.getString('idol');
+  const eraFilter = i.options.getString('era');
+  const page = i.options.getInteger('page') || 1;
+
+  let cards = allCards;
+
+  if (groupFilter) {
+    cards = cards.filter(c => c.group?.toLowerCase() === groupFilter.toLowerCase());
+  }
+
+  if (idolFilter) {
+    cards = cards.filter(c => c.member?.toLowerCase() === idolFilter.toLowerCase());
+  }
+
+  if (eraFilter) {
+    cards = cards.filter(c => c.era?.toLowerCase() === eraFilter.toLowerCase());
+  }
+
+  if (!cards.length) {
+    return i.reply({
+      embeds: [ruiEmbed('No cards found', 'No cards match those filters.')],
+      ephemeral: true
+    });
+  }
+
+  const userCards = Array.isArray(allUserCards[id]) ? allUserCards[id] : [];
+  const ownedIds = new Set(userCards.map(c => typeof c === 'string' ? c : c.id));
+
+  const totalOwned = cards.filter(c => ownedIds.has(c.id)).length;
+  const totalCards = cards.length;
+
+  const perPage = 16;
+  const maxPage = Math.ceil(cards.length / perPage);
+  const safePage = Math.min(Math.max(page, 1), maxPage);
+  const pageCards = cards.slice((safePage - 1) * perPage, safePage * perPage);
+
+  const canvas = createCanvas(1000, 1250);
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#1f1f23';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 46px Sans';
+  ctx.fillText('Collection Progress', 60, 80);
+
+  ctx.font = '30px Sans';
+  ctx.fillText(`${totalOwned}/${totalCards} Cards`, 60, 130);
+  ctx.fillText(`Page ${safePage}/${maxPage}`, 60, 170);
+
+  const cardW = 180;
+  const cardH = 250;
+  const gapX = 45;
+  const gapY = 70;
+  const startX = 60;
+  const startY = 230;
+
+  for (let index = 0; index < pageCards.length; index++) {
+    const card = pageCards[index];
+    const col = index % 4;
+    const row = Math.floor(index / 4);
+
+    const x = startX + col * (cardW + gapX);
+    const y = startY + row * (cardH + gapY);
+
+    const owned = ownedIds.has(card.id);
+
+    try {
+      const img = await loadImage(card.image);
+
+      ctx.save();
+
+      if (!owned) {
+        ctx.filter = 'grayscale(100%) brightness(45%)';
+      }
+
+      ctx.drawImage(img, x, y, cardW, cardH);
+      ctx.restore();
+      ctx.filter = 'none';
+
+      ctx.fillStyle = owned ? '#ffffff' : '#999999';
+      ctx.font = 'bold 20px Sans';
+      ctx.textAlign = 'center';
+      ctx.fillText(card.id, x + cardW / 2, y + cardH + 28);
+
+    } catch (err) {
+      ctx.fillStyle = '#333333';
+      ctx.fillRect(x, y, cardW, cardH);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '18px Sans';
+      ctx.textAlign = 'center';
+      ctx.fillText('Image error', x + cardW / 2, y + cardH / 2);
+      ctx.fillText(card.id, x + cardW / 2, y + cardH + 28);
+    }
+  }
+
+  const attachment = new AttachmentBuilder(canvas.toBuffer(), {
+    name: 'progress.png'
+  });
+
+  return i.reply({
+    content: `Progress: **${totalOwned}/${totalCards}** cards`,
+    files: [attachment]
+  });
+}
     /* /weekly */
     if (i.commandName === 'weekly') {
       const WEEK = 7 * 24 * 60 * 60 * 1000;
