@@ -597,7 +597,7 @@ cards.sort((a, b) => {
   const totalOwned = cards.filter(c => ownedIds.has(c.id)).length;
   const totalCards = cards.length;
 
-  const perPage = 16;
+  const perPage = 12;
   const maxPage = Math.ceil(cards.length / perPage);
   const safePage = Math.min(Math.max(page, 1), maxPage);
   const pageCards = cards.slice((safePage - 1) * perPage, safePage * perPage);
