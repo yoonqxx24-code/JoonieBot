@@ -2,13 +2,13 @@ require('dotenv').config();
 const { REST, Routes, SlashCommandBuilder } = require('discord.js');
 
 const commands = [
-  new SlashCommandBuilder().setName('ping').setDescription('Check if Rui is awake'),
-  new SlashCommandBuilder().setName('start').setDescription('Create your collector profile'),
-  new SlashCommandBuilder().setName('balance').setDescription('Show your coins, butterflies and cards'),
+  new SlashCommandBuilder().setName('ping').setDescription('Check if Joonie is awake'),
+  new SlashCommandBuilder().setName('start').setDescription('Create a profile'),
+  new SlashCommandBuilder().setName('balance').setDescription('Show your coins, ivy and cards'),
   new SlashCommandBuilder().setName('daily').setDescription('Claim your daily reward'),
   new SlashCommandBuilder().setName('weekly').setDescription('Claim your weekly reward'),
   new SlashCommandBuilder().setName('monthly').setDescription('Claim your monthly reward'),
-  new SlashCommandBuilder().setName('work').setDescription('Do a small task for Rui and earn rewards'),
+  new SlashCommandBuilder().setName('work').setDescription('Help out bangtan to earn rewards'),
   new SlashCommandBuilder().setName('packs').setDescription('Show your unopened card packs'),
   new SlashCommandBuilder()
     .setName('openpack')
@@ -22,7 +22,7 @@ const commands = [
           { name: '10-card pack', value: 'pack10' },
           { name: '20-card pack', value: 'pack20' }
         )
-    )
+    ),
   new SlashCommandBuilder().setName('drop').setDescription('Drop 3 random cards')
 ].map(c => c.toJSON());
 
