@@ -479,7 +479,8 @@ if (allCards.length) {
 
   myCards = filtered;
 }
-
+if (u.ivy == null) u.ivy = 0;
+if (u.coins == null) u.coins = 0;
       return i.reply({
         embeds: [ruiEmbed(`${name}'s Balance`, `Here’s your current collector data.`, [
           { name: 'Coins', value: String(u.coins), inline: true },
