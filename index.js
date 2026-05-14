@@ -199,7 +199,7 @@ const rarityLetterMap = {
    Slash Commands registrieren
 ---------------------------------------------------- */
 async function registerCommands() {
-  const commands = [
+  const publicCommands = [
     new SlashCommandBuilder().setName('ping').setDescription('Check if Namjoon is awake'),
     new SlashCommandBuilder().setName('start').setDescription('Create a profile'),
     new SlashCommandBuilder().setName('balance').setDescription('Show your coins, ivy and cards'),
