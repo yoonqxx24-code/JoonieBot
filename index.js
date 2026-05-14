@@ -445,7 +445,7 @@ client.on(Events.InteractionCreate, async (i) => {
       return i.reply({
         embeds: [ruiEmbed(`${name}'s Balance`, `Here’s your current collector data.`, [
           { name: 'Coins', value: String(u.coins), inline: true },
-          { name: 'Ivy', value: String(u.ivy, inline: true },
+          { name: 'Ivy', value: String(u.ivy), inline: true },
           { name: 'Cards', value: String(myCards.length), inline: true }
         ])]
       });
