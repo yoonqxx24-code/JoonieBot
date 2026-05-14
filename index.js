@@ -527,13 +527,13 @@ u.lastDropClaim = Date.now();
             { name: '/claim', value: 'Claim a random card' },
             { name: '/buy', value: 'Buy a specific card by ID' },
             { name: '/gift', value: 'Send coins, ivy or cards to other players' },
-            { name: '/inventory', value: 'View your collected cards' }
-            { name: '/search', value: 'Search cards by card ID or idol'}
-            { name: '/progress', value: 'Shows your collection progress'}
-            { name: '/binder_add', value: 'Create a binder'}
-            { name: '/binder_list', value: 'Show your binders in a list'}
-            { name: '/binder_show', value: 'Show your binder'}
-            { name: '/binder_edit', value: 'Rename or change cards in a binder'}
+            { name: '/inventory', value: 'View your collected cards' },
+            { name: '/search', value: 'Search cards by card ID or idol'},
+            { name: '/progress', value: 'Shows your collection progress'},
+            { name: '/binder_add', value: 'Create a binder'},
+            { name: '/binder_list', value: 'Show your binders in a list'},
+            { name: '/binder_show', value: 'Show your binder'},
+            { name: '/binder_edit', value: 'Rename or change cards in a binder'},
             { name: '/binder_delete', value: 'Delete one of your binders'}
           ]
         )],
