@@ -310,16 +310,23 @@ async function registerCommands() {
    Events
 ---------------------------------------------------- */
 const WORK_MESSAGES = [
-  "You’ve been working so hard again... Hyun said you deserve a break.",
-  "You showed up again. I’m proud of you — even if Haru keeps stealing your snacks during breaks.",
-  "Work done! Don’t tell Noa I said this, but you might actually be more productive than him today.",
-  "I helped count your coins. Muti said it looks like you’re saving for something big.",
-  "That look of determination suits you.",
-  "You’ve been putting in so much effort lately… the others noticed too. We’re all cheering for you.",
-  "You did well again today. Small steps, right? Isn’t that what they always say?",
-  "Here, I saved a few butterflies for you.",
-  "Another day, another job done. Don’t forget to rest, okay? Even the strongest need a pause.",
-  "You earned these coins and butterflies fair and square. Keep them safe."
+  "You found extra rewards bedind a stack of Indigo albums!",
+  "Someone whispered 'strong power thank you' into your ear before disappearing into the storage room",
+  "Work done! Don’t tell Noa but you might actually be more productive than him today.",
+  "Jimin paid you for sneaking one of Jks bananamilk packs from the fridge",
+  "You helped Yoongi organizing studio equipment and earned",
+  "You helped Seokjin prepare snacks for the gallery staff and received",
+  "You worked overtime reorganizing album shelves after someone sorted them by color instead of era. You received",
+  "Here, I saved a few ivy for you.",
+  "You helped Namjoon water the gallery plants today and earned",
+  "You organized old concert photos losing at least 10 minutes staring at 2015 Bangtan",
+  "You earned these fair and square. Keep it safe.",
+  "You spent the afternoon breaking up another argument about dumplings and earned",
+  "You stayed late after 'one last rehearsal' became twelve more.",
+  "unfortunately you didn't finish your work in time cause Jungkook connected their phone to the gallery speakers and started a full concert. AT LEAST YOU TRIED",
+  "Jin claimed he was supervising today's shift but mostly just stood there looking expensive. You received",
+  "Namjoon confidently said 'nothing will break this time' yet you immediately qualified for hazard pay and earned",
+  "You and Tae spend an hour choosing between two decorations that looked exactly the same to everyone else. You received"
 ];
 
 client.once(Events.ClientReady, async (c) => {
