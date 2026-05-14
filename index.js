@@ -471,7 +471,7 @@ client.on(Events.InteractionCreate, async (i) => {
         { name: 'Coins', value: `+${coins}`, inline: true },
         { name: 'Ivy', value: `+${ivy}`, inline: true },
         { name: 'Cards', value: 'No cards available yet', inline: false },
-        { name: 'New total', value: `${u.coins} / ${u.ivy}`, inline: false }
+        { name: 'New total', value: `${u.coins} 🪙 / ${u.ivy} 🌿`, inline: false }
       ])] });
     }
 
@@ -495,7 +495,7 @@ client.on(Events.InteractionCreate, async (i) => {
         { name: 'Coins', value: `+${coins}`, inline: true },
         { name: 'Ivy', value: `+${ivy}`, inline: true },
         { name: 'Cards', value: 'No cards available yet', inline: false },
-        { name: 'New total', value: `${u.coins} / ${u.leaves}`, inline: false }
+        { name: 'New total', value: `${u.coins} 🪙 / ${u.ivy} 🌿`, inline: false }
       ])] });
     }
 
@@ -519,7 +519,7 @@ client.on(Events.InteractionCreate, async (i) => {
         { name: 'Coins', value: `+${coins}`, inline: true },
         { name: 'Ivy', value: `+${ivy}`, inline: true },
         { name: 'Cards', value: 'No cards available yet', inline: false },
-        { name: 'New total', value: `${u.coins}  / ${u.ivy}`, inline: false }
+        { name: 'New total', value:`${u.coins} 🪙 / ${u.ivy} 🌿`, inline: false }
       ])] });
     }
 
@@ -541,7 +541,7 @@ client.on(Events.InteractionCreate, async (i) => {
       u.coins += coins; u.ivy += ivy; u.lastWork = new Date().toISOString();
       await saveJsonOrRemote(USERS_FILE, users);
 
-      return i.reply({ embeds: [ruiEmbed('Work complete', `${msg}\nYou earned ${coins} and ${ivy}.\nNew total: ${u.coins} / ${u.ivy}.`)] });
+      return i.reply({ embeds: [ruiEmbed('Work complete', `${msg}\nYou earned 🪙 ${coins} and 🌿 ${ivy}.\nNew total: 🪙 ${u.coins} / 🌿 ${u.ivy}.`)] });
     }
 
     /* /inventory */
@@ -569,7 +569,7 @@ if (i.commandName === 'inventory') {
     return i.reply({
       embeds: [ruiEmbed(
         `${name}'s Inventory`,
-        "You don't have any cards yet. Try `/drop` or buy a pack later."
+        "You don't have any cards yet. Try `/drop` or /claim."
       )]
     });
   }
@@ -649,24 +649,24 @@ const price = RARITY_PRICES[rarity];
 
       if (!users[targetUser.id]) {
         users[targetUser.id] = {
-          id: targetUser.id, name: targetUser.username, coins: 0, leaves: 0, created: new Date().toISOString(),
+          id: targetUser.id, name: targetUser.username, coins: 0, ivy: 0, created: new Date().toISOString(),
           lastDaily: null, lastWeekly: null, lastMonthly: null, lastWork: null, lastDrop: null, pendingDrop: null, lastClaim: null
         };
       }
 
       const receiver = users[targetUser.id];
 
-      if (what === 'coins' || what === 'butterflies') {
+      if (what === 'coins' || what === 'ivy') {
         if (!amount || amount <= 0) return i.reply({ embeds: [ruiEmbed('Missing amount', 'Tell me how many you want to send.')] });
         if (what === 'coins') {
           if (u.coins < amount) return i.reply({ embeds: [ruiEmbed('Not enough', `You only have ${u.coins} coins.`)], ephemeral: true });
           u.coins -= amount; receiver.coins += amount;
         } else {
-          if (u.leaves < amount) return i.reply({ embeds: [ruiEmbed('Not enough', `You only have ${u.leaves} leaves.`)], ephemeral: true });
-          u.leaves -= amount; receiver.leaves += amount;
+          if (u.ivy < amount) return i.reply({ embeds: [ruiEmbed('Not enough', `You only have ${u.ivy} ivy.`)], ephemeral: true });
+          u.ivy -= amount; receiver.ivy += amount;
         }
         await saveJsonOrRemote(USERS_FILE, users);
-        return i.reply({ embeds: [ruiEmbed('Gift sent', `${name} sent **${amount}** ${what === 'coins' ? 'coins' : 'leaves'} to ${targetUser.username}.`)] });
+        return i.reply({ embeds: [ruiEmbed('Gift sent', `${name} sent **${amount}** ${what === 'coins' ? 'coins' : 'ivy'} to ${targetUser.username}.`)] });
       }
 
       if (what === 'card') {
@@ -689,7 +689,7 @@ const price = RARITY_PRICES[rarity];
         return i.reply({ embeds: [ruiEmbed('Card sent', `${name} sent **${cardToSend.id}** (${cardToSend.group} — ${cardToSend.member}) to ${targetUser.username}.`)] });
       }
 
-      return i.reply({ embeds: [ruiEmbed('Unknown thing', 'You can gift `coins`, `leaves` or `card`.')] });
+      return i.reply({ embeds: [ruiEmbed('Unknown thing', 'You can gift `coins` `ivy` or `card`.')] });
     }
 
     /* /addcard (STAFF + Template-Check, ALL CAPS + ES/EL, Bild-Datei Pflicht) */
@@ -742,7 +742,7 @@ if (category !== 'regular') {
   return i.reply({
     embeds: [ruiEmbed(
       'Invalid card_id',
-      'Use valid prefixes:\nC/R/S/U/L = Regular rarities\nHB = Birthday\nB = Booster\nP = Patreon\nLE = Limited'
+      'Use valid prefixes:\nC/R/S/U/L = Regular rarities\nHB = Birthday\nB = Public\nPU = Booster\nP = Patreon\nLE = Limited'
     )],
     ephemeral: true
   });
@@ -860,7 +860,7 @@ if (prefix !== expected) {
 
       if (!staffList.includes(i.user.id)) {
         return i.reply({
-          embeds: [ruiEmbed('Not allowed', 'This command is for Rui staff only.')],
+          embeds: [ruiEmbed('Not allowed', 'This command is for Joonie staff only.')],
           ephemeral: true
         });
       }
@@ -918,7 +918,7 @@ const chosen = pool[Math.floor(Math.random() * pool.length)];
 
       const embed = new EmbedBuilder()
         .setTitle('Card claimed')
-        .setDescription(`You got **${chosen.id}** (${chosen.group} — ${chosen.member}) • **${chosen.rarity?.toUpperCase() || 'UNKNOWN'}**! 🎉`)
+        .setDescription(`You got **${chosen.id}** (${chosen.group} — ${chosen.member}) • **${chosen.rarity?.toUpperCase() || 'UNKNOWN'}**!`)
         .setColor(0xFFB6C1);
       if (chosen.image) embed.setImage(chosen.image);
 
@@ -986,7 +986,7 @@ const finalPool = pool.length
       );
 
       return i.reply({
-        content: `🌱**${i.user.username} dropped 3 cards!**\nPick your favorite.`,
+        content: `**${i.user.username} dropped 3 cards!**`,
         files: [{ attachment: imageBuffer, name: 'drop.png' }],
         components: [row]
       });
@@ -1004,7 +1004,7 @@ const finalPool = pool.length
 ---------------------------------------------------- */
 const express = require("express");
 const app = express();
-app.get("/", (req, res) => res.send("Rui is alive"));
+app.get("/", (req, res) => res.send("Joonie is alive"));
 app.listen(process.env.PORT || 3000);
 
 // start bot
