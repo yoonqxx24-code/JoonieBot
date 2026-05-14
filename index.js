@@ -130,9 +130,9 @@ const BASE_RARITY_WEIGHTS = {
 };
 
 const BOOST_MULTIPLIERS = {
-  small: { common: 0.9, rare: 1.1, super_rare: 1.2, ultra_rare: 1.25, legendary: 1.3, event: 1.3, limited: 1.3 },
-  normal:{ common: 0.75, rare: 1.25, super_rare: 1.4, ultra_rare: 1.5, legendary: 1.6, event: 1.6, limited: 1.6 },
-  mega:  { common: 0.5, rare: 1.4, super_rare: 1.6, ultra_rare: 1.8, legendary: 2.0, event: 2.2, limited: 2.3 }
+  small: { common: 0.9, rare: 1.1, super_rare: 1.15, ultra_rare: 1.2, legendary: 1.25, birthday: 1.25, public: 1.2, limited: 1.3 },
+  normal:{ common: 0.75, rare: 1.25, super_rare: 1.35, ultra_rare: 1.45, legendary: 1.55, birthday: 1.6, public: 1.5, limited: 1.75 },
+  mega:  { common: 0.5, rare: 1.45, super_rare: 1.7, ultra_rare: 1.9, legendary: 2.1, birthday: 2.2, public: 2.0, limited: 1.8 }
 };
 
 // Kaufpreise (event/limited nicht kaufbar)
