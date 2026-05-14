@@ -207,6 +207,14 @@ async function registerCommands() {
     new SlashCommandBuilder().setName('monthly').setDescription('Claim your monthly reward'),
     new SlashCommandBuilder().setName('drop').setDescription('Drop 3 random cards'),
     new SlashCommandBuilder()
+  .setName('search')
+  .setDescription('Search for a card by ID')
+  .addStringOption(o =>
+    o.setName('card_id')
+      .setDescription('Card ID')
+      .setRequired(true)
+  ),
+    new SlashCommandBuilder()
   .setName('progress')
   .setDescription('Show your collection progress')
   .addStringOption(o =>
@@ -732,7 +740,43 @@ cards.sort((a, b) => {
         { name: 'New total', value:`${u.coins} 🪙 / ${u.ivy} 🌿`, inline: false }
       ])] });
     }
+/* /search */
+if (i.commandName === 'search') {
+  const cardIdInput = i.options.getString('card_id');
+  const cardId = cardIdInput.toUpperCase();
 
+  const allCards = await loadJsonOrRemote(CARDS_FILE, []);
+  const allUserCards = await loadJsonOrRemote(USER_CARDS_FILE, {});
+
+  const card = allCards.find(c => c.id?.toUpperCase() === cardId);
+
+  if (!card) {
+    return i.reply({
+      embeds: [ruiEmbed('Card not found', `No card with the ID **${cardId}** exists.`)],
+      ephemeral: true
+    });
+  }
+
+  const userCards = Array.isArray(allUserCards[id]) ? allUserCards[id] : [];
+  const ownedIds = new Set(userCards.map(c => typeof c === 'string' ? c : c.id));
+
+  const ownsCard = ownedIds.has(card.id);
+
+  const embed = new EmbedBuilder()
+    .setTitle(card.id)
+    .setDescription(
+      `**Group:** ${card.group || 'Unknown'}\n` +
+      `**Idol:** ${card.member || 'Unknown'}\n` +
+      `**Era:** ${card.era || 'Unknown'}\n` +
+      `**Rarity:** ${card.rarity || 'Unknown'}\n\n` +
+      `**Owned:** ${ownsCard ? 'Yes' : 'No'}`
+    )
+    .setColor(0xFFB6C1);
+
+  if (card.image) embed.setImage(card.image);
+
+  return i.reply({ embeds: [embed] });
+}
     /* /work */
     if (i.commandName === 'work') {
       const now = Date.now();
