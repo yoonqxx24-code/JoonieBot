@@ -219,6 +219,10 @@ async function registerCommands() {
       .setDescription('Card IDs separated by commas')
       .setRequired(true)
   ),
+    new SlashCommandBuilder()
+  .setName('binder_list')
+  .setDescription('Show your saved binders'),
+    
     new SlashCommandBuilder().setName('search').setDescription('Search for a card')
   .addStringOption(o =>
   o.setName('card_id')
@@ -766,6 +770,30 @@ cards.sort((a, b) => {
     content: `Binder **${name}** created with **${requestedIds.length}/9** cards.`
   });
   }
+    if (i.commandName === 'binder_list') {
+  const id = i.user.id;
+  const users = await loadJsonOrRemote(USERS_FILE, {});
+
+  const binders = users[id]?.binders || {};
+  const names = Object.keys(binders);
+
+  if (!names.length) {
+    return i.reply({
+      content: 'You do not have any binders yet.',
+      ephemeral: true
+    });
+  }
+
+  const list = names
+    .map(name => `⟡ **${name}** — ${binders[name].length}/9 cards`)
+    .join('\n');
+
+  return i.reply({
+    embeds: [
+      ruiEmbed('Your Binders', list)
+    ]
+  });
+    }
     
     /* /weekly */
     if (i.commandName === 'weekly') {
