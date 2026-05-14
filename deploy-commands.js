@@ -9,6 +9,9 @@ const commands = [
   new SlashCommandBuilder().setName('weekly').setDescription('Claim your weekly reward'),
   new SlashCommandBuilder().setName('monthly').setDescription('Claim your monthly reward'),
   new SlashCommandBuilder().setName('work').setDescription('Help out bangtan to earn rewards'),
+  new SlashCommandBuilder().setName('inventory').setDescription('Show your collected cards'),
+  new SlashCommandBuilder().setName('claim').setDescription('Claim a random card every 30 seconds'),
+  new SlashCommandBuilder().setName('overview').setDescription('Show all commands'),
   new SlashCommandBuilder().setName('packs').setDescription('Show your unopened card packs'),
   new SlashCommandBuilder()
     .setName('openpack')
