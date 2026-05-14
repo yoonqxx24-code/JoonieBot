@@ -45,7 +45,7 @@ module.exports = {
   "Namjoon confidently said 'nothing will break this time' yet you immediately qualified for hazard pay and earned",
   "You and Tae spend an hour choosing between two decorations that looked exactly the same to everyone else. You received"
 ];
-];
+
 
 const randomMsg = WORK_MESSAGES[Math.floor(Math.random() * WORK_MESSAGES.length)];
 
