@@ -119,13 +119,14 @@ async function saveJsonOrRemote(file, data) {
    BOOST / DROP – Hilfsdaten
 ---------------------------------------------------- */
 const BASE_RARITY_WEIGHTS = {
-  common: 44,
-  rare: 20,
-  super_rare: 15,
-  ultra_rare: 7,
-  legendary: 6,
-  public: 5,
-  limited: 3
+  common: 35,
+  rare: 22,
+  super_rare: 16,
+  ultra_rare: 10,
+  legendary: 7,
+  birthday: 5,
+  public: 3,
+  limited: 2
 };
 
 const BOOST_MULTIPLIERS = {
