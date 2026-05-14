@@ -1107,7 +1107,7 @@ if (prefix !== expected) {
     /* /claim */
     if (i.commandName === 'claim') {
       const now = Date.now();
-      const COOLDOWN = 90 * 1000;
+      const COOLDOWN = 30 * 1000;
       const cards = await loadJsonOrRemote(CARDS_FILE, []);
       if (!cards.length) return i.reply({ embeds: [ruiEmbed('No cards available', 'There are no cards to claim yet.')] });
 
@@ -1169,7 +1169,7 @@ if (i.commandName === 'drop') {
 
       if (u.lastDrop) {
         const diff = now - new Date(u.lastDrop).getTime();
-        const COOLDOWN = 60 * 1000;
+        const COOLDOWN = 2 * 60 * 1000;
         if (diff < COOLDOWN) {
           const left = Math.ceil((COOLDOWN - diff) / 1000);
           return i.reply({
