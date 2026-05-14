@@ -323,9 +323,11 @@ async function registerCommands() {
         )
       )
       .addIntegerOption(o => o.setName('amount').setDescription('Amount').setRequired(false))
-      .addStringOption(o => o.setName('card_id').setDescription('Card ID').setRequired(false)),
+      .addStringOption(o => o.setName('card_id').setDescription('Card ID').setRequired(false))
+].map(c => c.toJSON());
 
-    new SlashCommandBuilder()
+const staffCommands = [
+  new SlashCommandBuilder()
   .setName('addcard')
   .setDescription('create a new card')
   .addStringOption(o =>
@@ -387,17 +389,17 @@ async function registerCommands() {
       )
   ].map(c => c.toJSON());
 
-  const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
   // global (optional zusätzlich guild-scope falls gewünscht)
-  await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
+  await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: publicCommands });
 
-  // optional: in 1 Guild schneller sichtbar
   if (process.env.GUILD_ID) {
     await rest.put(
       Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
-      { body: commands }
-    );
+      { body: staffCommands }
+  );
+}
   }
 
   console.log('Slash commands registered');
