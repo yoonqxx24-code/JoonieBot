@@ -389,7 +389,7 @@ client.on(Events.InteractionCreate, async (i) => {
 
     if (!users[id]) {
       users[id] = {
-        id, name, coins: 0, butterflies: 0, created: new Date().toISOString(),
+        id, name, coins: 0, ivy: 0, created: new Date().toISOString(),
         lastDaily: null, lastWeekly: null, lastMonthly: null, lastWork: null,
         lastDrop: null, pendingDrop: null, lastClaim: null
       };
@@ -399,23 +399,23 @@ client.on(Events.InteractionCreate, async (i) => {
 
     /* /ping */
     if (i.commandName === 'ping') {
-      return i.reply({ embeds: [ruiEmbed('Pong', 'Rui is awake.')] });
+      return i.reply({ embeds: [ruiEmbed('Pong', 'Joonie is awake.')] });
     }
 
     /* /overview */
     if (i.commandName === 'overview') {
       return i.reply({
-        embeds: [ruiEmbed('Rui Command Overview',
+        embeds: [ruiEmbed('Joonie Command Overview',
           'Here’s a quick summary of all available commands:',
           [
-            { name: '/start', value: 'Create your collector profile' },
-            { name: '/balance', value: 'Show your coins, butterflies, and cards' },
+            { name: '/start', value: 'Create your profile' },
+            { name: '/balance', value: 'Show your coins, ivy and cards' },
             { name: '/daily /weekly /monthly', value: 'Claim your rewards' },
-            { name: '/work', value: 'Earn coins and butterflies' },
-            { name: '/drop', value: 'Drop 3 random cards and choose one (1 min cd)' },
-            { name: '/claim', value: 'Claim a random card every 90 seconds' },
-            { name: '/buy', value: 'Buy a specific card by ID (not event or limited)' },
-            { name: '/gift', value: 'Send coins, butterflies, or cards to other players' },
+            { name: '/work', value: 'Earn coins and ivy' },
+            { name: '/drop', value: 'Drop 3 random cards' },
+            { name: '/claim', value: 'Claim a random card' },
+            { name: '/buy', value: 'Buy a specific card by ID' },
+            { name: '/gift', value: 'Send coins, ivy or cards to other players' },
             { name: '/inventory', value: 'View your collected cards' }
           ]
         )],
@@ -430,7 +430,7 @@ client.on(Events.InteractionCreate, async (i) => {
         return i.reply({ embeds: [ruiEmbed('Already started', `Oh! Seems like you already created a profile, ${name}. Have fun playing.`)] });
       }
       all[id] = {
-        id, name, coins: 0, leaves: 0, created: new Date().toISOString(),
+        id, name, coins: 0, ivy: 0, created: new Date().toISOString(),
         lastDaily: null, lastWeekly: null, lastMonthly: null, lastWork: null,
         lastDrop: null, pendingDrop: null, lastClaim: null
       };
@@ -443,9 +443,9 @@ client.on(Events.InteractionCreate, async (i) => {
       const allUserCards = await loadJsonOrRemote(USER_CARDS_FILE, {});
       const myCards = Array.isArray(allUserCards[id]) ? allUserCards[id] : [];
       return i.reply({
-        embeds: [ruiEmbed(`${name}'s Balance`, `Here’s your current collector data. Keep playing to get more.`, [
+        embeds: [ruiEmbed(`${name}'s Balance`, `Here’s your current collector data.`, [
           { name: 'Coins', value: String(u.coins), inline: true },
-          { name: 'Leaves', value: String(u.leaves), inline: true },
+          { name: 'Ivy', value: String(u.ivy, inline: true },
           { name: 'Cards', value: String(myCards.length), inline: true }
         ])]
       });
@@ -463,15 +463,15 @@ client.on(Events.InteractionCreate, async (i) => {
       }
 
       const coins = rand(200, 750);
-      const leaves = rand(3, 7);
-      u.coins += coins; u.leaves += leaves; u.lastDaily = new Date().toISOString();
+      const ivy = rand(3, 7);
+      u.coins += coins; u.ivy += leaves; u.lastDaily = new Date().toISOString();
       await saveJsonOrRemote(USERS_FILE, users);
 
-      return i.reply({ embeds: [ruiEmbed('Daily collected', `${name}, here is what I found for you today.`, [
+      return i.reply({ embeds: [ruiEmbed('Daily collected', `${name}, here is your daily.`, [
         { name: 'Coins', value: `+${coins}`, inline: true },
-        { name: 'Leaves', value: `+${leaves}`, inline: true },
+        { name: 'Ivy', value: `+${ivy}`, inline: true },
         { name: 'Cards', value: 'No cards available yet', inline: false },
-        { name: 'New total', value: `${u.coins} / ${u.leaves}`, inline: false }
+        { name: 'New total', value: `${u.coins} / ${u.ivy}`, inline: false }
       ])] });
     }
 
@@ -487,13 +487,13 @@ client.on(Events.InteractionCreate, async (i) => {
       }
 
       const coins = rand(900, 1800);
-      const leaves = rand(10, 15);
-      u.coins += coins; u.leaves += leaves; u.lastWeekly = new Date().toISOString();
+      const ivy = rand(10, 15);
+      u.coins += coins; u.ivy += leaves; u.lastWeekly = new Date().toISOString();
       await saveJsonOrRemote(USERS_FILE, users);
 
       return i.reply({ embeds: [ruiEmbed('Weekly collected', `Weekly rewards for ${name}.`, [
         { name: 'Coins', value: `+${coins}`, inline: true },
-        { name: 'Leaves', value: `+${leaves}`, inline: true },
+        { name: 'Ivy', value: `+${ivy}`, inline: true },
         { name: 'Cards', value: 'No cards available yet', inline: false },
         { name: 'New total', value: `${u.coins} / ${u.leaves}`, inline: false }
       ])] });
@@ -511,15 +511,15 @@ client.on(Events.InteractionCreate, async (i) => {
       }
 
       const coins = rand(2500, 5000);
-      const leaves = rand(25, 50);
-      u.coins += coins; u.leaves += leaves; u.lastMonthly = new Date().toISOString();
+      const ivy = rand(25, 50);
+      u.coins += coins; u.ivy += ivy; u.lastMonthly = new Date().toISOString();
       await saveJsonOrRemote(USERS_FILE, users);
 
-      return i.reply({ embeds: [ruiEmbed('Monthly collected', `Big drop for ${name}.`, [
+      return i.reply({ embeds: [ruiEmbed('Monthly collected', ` for ${name}.`, [
         { name: 'Coins', value: `+${coins}`, inline: true },
-        { name: 'Leaves', value: `+${leaves}`, inline: true },
+        { name: 'Ivy', value: `+${ivy}`, inline: true },
         { name: 'Cards', value: 'No cards available yet', inline: false },
-        { name: 'New total', value: `${u.coins}  / ${u.leaves}`, inline: false }
+        { name: 'New total', value: `${u.coins}  / ${u.ivy}`, inline: false }
       ])] });
     }
 
@@ -535,13 +535,13 @@ client.on(Events.InteractionCreate, async (i) => {
       }
 
       const coins = rand(200, 750);
-      const butterflies = rand(3, 20);
+      const ivy = rand(3, 10);
       const msg = WORK_MESSAGES[Math.floor(Math.random() * WORK_MESSAGES.length)];
 
-      u.coins += coins; u.leaves += leaves; u.lastWork = new Date().toISOString();
+      u.coins += coins; u.ivy += ivy; u.lastWork = new Date().toISOString();
       await saveJsonOrRemote(USERS_FILE, users);
 
-      return i.reply({ embeds: [ruiEmbed('Work complete', `${msg}\nYou earned ${coins} and ${leaves}.\nNew total: ${u.coins} / ${u.leaves}.`)] });
+      return i.reply({ embeds: [ruiEmbed('Work complete', `${msg}\nYou earned ${coins} and ${ivy}.\nNew total: ${u.coins} / ${u.ivy}.`)] });
     }
 
     /* /inventory */
