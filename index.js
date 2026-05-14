@@ -200,7 +200,7 @@ async function registerCommands() {
   const commands = [
     new SlashCommandBuilder().setName('ping').setDescription('Check if Namjoon is awake'),
     new SlashCommandBuilder().setName('start').setDescription('Create a profile'),
-    new SlashCommandBuilder().setName('balance').setDescription('Show your coins, ivy and cards')
+    new SlashCommandBuilder().setName('balance').setDescription('Show your coins, ivy and cards'),
     let myCards = Array.isArray(allUserCards[id]) ? allUserCards[id] : [];
 
 if (allCards.length) {
