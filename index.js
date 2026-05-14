@@ -270,16 +270,16 @@ async function registerCommands() {
     // neue Staff-Commands
     new SlashCommandBuilder()
       .setName('editcard_dropon')
-      .setDescription('STAFF ONLY – make a card droppable')
+      .setDescription('make a card droppable')
       .addStringOption(o =>
-        o.setName('card_id').setDescription('Card ID (ALL CAPS)').setRequired(true)
+        o.setName('card_id').setDescription('Card ID').setRequired(true)
       ),
 
     new SlashCommandBuilder()
       .setName('editcard_dropoff')
-      .setDescription('STAFF ONLY – make a card NOT droppable')
+      .setDescription('make a card NOT droppable')
       .addStringOption(o =>
-        o.setName('card_id').setDescription('Card ID (ALL CAPS)').setRequired(true)
+        o.setName('card_id').setDescription('Card ID').setRequired(true)
       ),
 
     new SlashCommandBuilder()
