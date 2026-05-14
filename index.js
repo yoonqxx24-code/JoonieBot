@@ -206,6 +206,19 @@ async function registerCommands() {
     new SlashCommandBuilder().setName('weekly').setDescription('Claim your weekly reward'),
     new SlashCommandBuilder().setName('monthly').setDescription('Claim your monthly reward'),
     new SlashCommandBuilder().setName('drop').setDescription('Drop 3 random cards'),
+    new SlashCommandBuilder()
+  .setName('binder_add')
+  .setDescription('Create a binder with up to 9 owned cards')
+  .addStringOption(o =>
+    o.setName('name')
+      .setDescription('Binder name')
+      .setRequired(true)
+  )
+  .addStringOption(o =>
+    o.setName('cards')
+      .setDescription('Card IDs separated by commas')
+      .setRequired(true)
+  ),
     new SlashCommandBuilder().setName('search').setDescription('Search for a card')
   .addStringOption(o =>
   o.setName('card_id')
@@ -696,6 +709,64 @@ cards.sort((a, b) => {
     files: [attachment]
   });
 }
+  if (i.commandName === 'binder_add') {
+  const id = i.user.id;
+  const name = i.options.getString('name').trim();
+  const cardsInput = i.options.getString('cards');
+
+  const users = await loadJsonOrRemote(USERS_FILE, {});
+  const allCards = await loadJsonOrRemote(CARDS_FILE, []);
+  const allUserCards = await loadJsonOrRemote(USER_CARDS_FILE, {});
+
+  if (!users[id]) users[id] = { coins: 0, ivy: 0 };
+
+  if (!users[id].binders) users[id].binders = {};
+
+  const requestedIds = cardsInput
+    .split(',')
+    .map(x => x.trim().toUpperCase())
+    .filter(Boolean);
+
+  if (requestedIds.length > 9) {
+    return i.reply({
+      content: 'A binder can only hold up to **9 cards**.',
+      ephemeral: true
+    });
+  }
+
+  const existingCards = new Set(allCards.map(c => c.id?.toUpperCase()));
+  const invalidIds = requestedIds.filter(cardId => !existingCards.has(cardId));
+
+  if (invalidIds.length) {
+    return i.reply({
+      content: `These card IDs do not exist: **${invalidIds.join(', ')}**`,
+      ephemeral: true
+    });
+  }
+
+  const userCards = Array.isArray(allUserCards[id]) ? allUserCards[id] : [];
+  const ownedIds = new Set(userCards.map(c =>
+    typeof c === 'string' ? c.toUpperCase() : c.id?.toUpperCase()
+  ));
+
+  const notOwned = requestedIds.filter(cardId => !ownedIds.has(cardId));
+
+  if (notOwned.length) {
+    return i.reply({
+      content: `You can only add cards you own. Missing: **${notOwned.join(', ')}**`,
+      ephemeral: true
+    });
+  }
+
+  users[id].binders[name] = requestedIds;
+
+  await saveJsonOrRemote(USERS_FILE, users);
+
+  return i.reply({
+    content: `Binder **${name}** created with **${requestedIds.length}/9** cards.`
+  });
+  }
+    
     /* /weekly */
     if (i.commandName === 'weekly') {
       const WEEK = 7 * 24 * 60 * 60 * 1000;
