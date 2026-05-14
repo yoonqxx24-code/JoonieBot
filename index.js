@@ -124,7 +124,7 @@ const BASE_RARITY_WEIGHTS = {
   super_rare: 15,
   ultra_rare: 7,
   legendary: 6,
-  event: 5,
+  public: 5,
   limited: 3
 };
 
@@ -135,7 +135,7 @@ const BOOST_MULTIPLIERS = {
 };
 
 // Kaufpreise (event/limited nicht kaufbar)
-const RARITY_PRICES = { common: 200, rare: 400, super_rare: 650, ultra_rare: 900};
+const RARITY_PRICES = { common: 500, rare: 1000, super_rare: 1800, ultra_rare: 2500};
 
 function getActiveBoost(user) {
   if (!user || !user.activeBoost) return null;
@@ -195,23 +195,23 @@ const rarityLetterMap = {
 ---------------------------------------------------- */
 async function registerCommands() {
   const commands = [
-    new SlashCommandBuilder().setName('ping').setDescription('Check if Rui is awake'),
-    new SlashCommandBuilder().setName('start').setDescription('Create your collector profile'),
-    new SlashCommandBuilder().setName('balance').setDescription('Show your coins, butterflies and cards'),
+    new SlashCommandBuilder().setName('ping').setDescription('Check if Namjoon is awake'),
+    new SlashCommandBuilder().setName('start').setDescription('Create a profile'),
+    new SlashCommandBuilder().setName('balance').setDescription('Show your coins, ivy and cards'),
     new SlashCommandBuilder().setName('daily').setDescription('Claim your daily reward'),
     new SlashCommandBuilder().setName('weekly').setDescription('Claim your weekly reward'),
     new SlashCommandBuilder().setName('monthly').setDescription('Claim your monthly reward'),
     new SlashCommandBuilder().setName('drop').setDescription('Drop 3 random cards'),
-    new SlashCommandBuilder().setName('work').setDescription('Help around the XLOV studio to earn rewards'),
+    new SlashCommandBuilder().setName('work').setDescription('Help out bangtan to earn rewards'),
     new SlashCommandBuilder().setName('inventory').setDescription('Show your collected cards'),
-    new SlashCommandBuilder().setName('claim').setDescription('Claim a random card (every 90 seconds)'),
-    new SlashCommandBuilder().setName('overview').setDescription('Show all Rui commands'),
+    new SlashCommandBuilder().setName('claim').setDescription('Claim a random card (every 30 seconds)'),
+    new SlashCommandBuilder().setName('overview').setDescription('Show all commands'),
 
     new SlashCommandBuilder()
       .setName('buy')
       .setDescription('Buy a specific card by its card code')
       .addStringOption(o =>
-        o.setName('card_id').setDescription('The card code (ALL CAPS, e.g. CXLRIV101)').setRequired(true)
+        o.setName('card_id').setDescription('Card code ').setRequired(true)
       ),
 
     new SlashCommandBuilder()
@@ -242,9 +242,10 @@ async function registerCommands() {
     o.setName('category').setDescription('Card category').setRequired(true).addChoices(
       { name: 'Regular', value: 'regular' },
       { name: 'Happy Birthday', value: 'birthday' },
-      { name: 'Limited', value: 'limited' },
+      { name: 'Public', value: 'public' },
       { name: 'Booster', value: 'booster' },
-      { name: 'Patreon', value: 'patreon' }
+      { name: 'Patreon', value: 'patreon' },
+      { name: 'Limited', value: 'limited' }
     )
   )
   .addStringOption(o => o.setName('era').setDescription('Era name').setRequired(true))
