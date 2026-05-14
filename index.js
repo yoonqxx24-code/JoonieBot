@@ -206,30 +206,17 @@ async function registerCommands() {
     new SlashCommandBuilder().setName('weekly').setDescription('Claim your weekly reward'),
     new SlashCommandBuilder().setName('monthly').setDescription('Claim your monthly reward'),
     new SlashCommandBuilder().setName('drop').setDescription('Drop 3 random cards'),
-    new SlashCommandBuilder()
-  .setName('search')
-  .setDescription('Search for a card by ID')
+    new SlashCommandBuilder().setName('search').setDescription('Search for a card')
   .addStringOption(o =>
   o.setName('card_id')
     .setDescription('Search for a card')
     .setRequired(false)
 )
 .addStringOption(o =>
-  o.setName('group')
-    .setDescription('Search by group')
-    .setRequired(false)
-)
-.addStringOption(o =>
   o.setName('idol')
     .setDescription('Search by idol')
     .setRequired(false)
-)
-.addStringOption(o =>
-  o.setName('era')
-    .setDescription('Search by era')
-    .setRequired(false)
-)
-  ),
+),
     new SlashCommandBuilder()
   .setName('progress')
   .setDescription('Show your collection progress')
@@ -772,16 +759,8 @@ if (i.commandName === 'search') {
     results = results.filter(c => c.id?.toUpperCase() === cardIdInput.toUpperCase());
   }
 
-  if (groupFilter) {
-    results = results.filter(c => c.group?.toLowerCase() === groupFilter.toLowerCase());
-  }
-
   if (idolFilter) {
     results = results.filter(c => c.member?.toLowerCase() === idolFilter.toLowerCase());
-  }
-
-  if (eraFilter) {
-    results = results.filter(c => c.era?.toLowerCase() === eraFilter.toLowerCase());
   }
 
   if (!results.length) {
