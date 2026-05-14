@@ -200,7 +200,20 @@ async function registerCommands() {
   const commands = [
     new SlashCommandBuilder().setName('ping').setDescription('Check if Namjoon is awake'),
     new SlashCommandBuilder().setName('start').setDescription('Create a profile'),
-    new SlashCommandBuilder().setName('balance').setDescription('Show your coins, ivy and cards'),
+    new SlashCommandBuilder().setName('balance').setDescription('Show your coins, ivy and cards')
+    let myCards = Array.isArray(allUserCards[id]) ? allUserCards[id] : [];
+
+if (allCards.length) {
+  const validIds = new Set(allCards.map(c => c.id));
+  const filtered = myCards.filter(c => validIds.has(c.id));
+
+  if (filtered.length !== myCards.length) {
+    allUserCards[id] = filtered;
+    await saveJsonOrRemote(USER_CARDS_FILE, allUserCards);
+  }
+
+  myCards = filtered;
+},
     new SlashCommandBuilder().setName('daily').setDescription('Claim your daily reward'),
     new SlashCommandBuilder().setName('weekly').setDescription('Claim your weekly reward'),
     new SlashCommandBuilder().setName('monthly').setDescription('Claim your monthly reward'),
