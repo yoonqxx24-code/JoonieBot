@@ -463,9 +463,14 @@ client.on(Events.InteractionCreate, async (i) => {
       const allUserCards = await loadJsonOrRemote(USER_CARDS_FILE, {});
       const allCards = await loadJsonOrRemote(CARDS_FILE, []);
       let myCards = Array.isArray(allUserCards[id]) ? allUserCards[id] : [];
+
 if (allCards.length) {
   const validIds = new Set(allCards.map(c => c.id));
-  const filtered = myCards.filter(c => validIds.has(c.id));
+
+  const filtered = myCards.filter(c => {
+    const cardId = typeof c === 'string' ? c : c.id;
+    return validIds.has(cardId);
+  });
 
   if (filtered.length !== myCards.length) {
     allUserCards[id] = filtered;
