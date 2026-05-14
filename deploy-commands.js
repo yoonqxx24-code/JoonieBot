@@ -2,7 +2,7 @@ require('dotenv').config();
 const { REST, Routes, SlashCommandBuilder } = require('discord.js');
 
 const commands = [
-  new SlashCommandBuilder().setName('ping').setDescription('Check if Joonie is awake'),
+  new SlashCommandBuilder().setName('ping').setDescription('Check if Namjoon is awake'),
   new SlashCommandBuilder().setName('start').setDescription('Create a profile'),
   new SlashCommandBuilder().setName('balance').setDescription('Show your coins, ivy and cards'),
   new SlashCommandBuilder().setName('daily').setDescription('Claim your daily reward'),
@@ -26,7 +26,7 @@ const commands = [
           { name: '20-card pack', value: 'pack20' }
         )
     ),
-  new SlashCommandBuilder().setName('drop').setDescription('Drop 3 random cards')
+  new SlashCommandBuilder().setName('drop').setDescription('Drop 3 cards')
 ].map(c => c.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
