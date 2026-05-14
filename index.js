@@ -186,6 +186,7 @@ const rarityLetterMap = {
   legendary: 'L',
 
   birthday: 'HB',
+  public: 'PU',
   booster: 'B',
   patreon: 'P',
   limited: 'LE'
@@ -205,36 +206,36 @@ async function registerCommands() {
     new SlashCommandBuilder().setName('drop').setDescription('Drop 3 random cards'),
     new SlashCommandBuilder().setName('work').setDescription('Help out bangtan to earn rewards'),
     new SlashCommandBuilder().setName('inventory').setDescription('Show your collected cards'),
-    new SlashCommandBuilder().setName('claim').setDescription('Claim a random card (every 30 seconds)'),
+    new SlashCommandBuilder().setName('claim').setDescription('Claim a random card every 30 seconds'),
     new SlashCommandBuilder().setName('overview').setDescription('Show all commands'),
 
     new SlashCommandBuilder()
       .setName('buy')
-      .setDescription('Buy a specific card by its card code')
+      .setDescription('Buy a card')
       .addStringOption(o =>
-        o.setName('card_id').setDescription('Card code ').setRequired(true)
+        o.setName('card_id').setDescription('Card code').setRequired(true)
       ),
 
     new SlashCommandBuilder()
       .setName('gift')
-      .setDescription('Send coins, butterflies or a card to another player')
+      .setDescription('Send coins, ivy or a card to another player')
       .addUserOption(o => o.setName('target').setDescription('Who should receive it?').setRequired(true))
       .addStringOption(o =>
         o.setName('what').setDescription('What do you want to gift?').setRequired(true).addChoices(
           { name: 'Coins', value: 'coins' },
-          { name: 'Butterflies', value: 'butterflies' },
+          { name: 'Ivy', value: 'ivy' },
           { name: 'Card', value: 'card' }
         )
       )
-      .addIntegerOption(o => o.setName('amount').setDescription('Amount (for coins/butterflies)').setRequired(false))
-      .addStringOption(o => o.setName('card_id').setDescription('Card ID (ALL CAPS)').setRequired(false)),
+      .addIntegerOption(o => o.setName('amount').setDescription('Amount').setRequired(false))
+      .addStringOption(o => o.setName('card_id').setDescription('Card ID').setRequired(false)),
 
     new SlashCommandBuilder()
   .setName('addcard')
-  .setDescription('STAFF ONLY – create a new card')
+  .setDescription('create a new card')
   .addStringOption(o =>
     o.setName('card_id')
-      .setDescription('Card ID (ALL CAPS)')
+      .setDescription('Card ID')
       .setRequired(true)
   )
   .addStringOption(o => o.setName('group').setDescription('Group name').setRequired(true))
