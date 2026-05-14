@@ -211,7 +211,7 @@ async function registerCommands() {
   o.setName('card_id')
     .setDescription('Search for a card')
     .setRequired(false)
-)
+) 
 .addStringOption(o =>
   o.setName('idol')
     .setDescription('Search by idol')
