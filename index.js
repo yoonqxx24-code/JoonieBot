@@ -207,6 +207,14 @@ async function registerCommands() {
     new SlashCommandBuilder().setName('monthly').setDescription('Claim your monthly reward'),
     new SlashCommandBuilder().setName('drop').setDescription('Drop 3 random cards'),
     new SlashCommandBuilder()
+  .setName('binder_delete')
+  .setDescription('Delete one of your binders')
+  .addStringOption(o =>
+    o.setName('name')
+      .setDescription('Binder name')
+      .setRequired(true)
+  ),
+    new SlashCommandBuilder()
   .setName('binder_edit')
   .setDescription('Edit an existing binder')
   .addStringOption(o =>
@@ -796,6 +804,28 @@ cards.sort((a, b) => {
     content: `Binder **${name}** created with **${requestedIds.length}/9** cards.`
   });
   }
+    if (i.commandName === 'binder_delete') {
+  const id = i.user.id;
+  const name = i.options.getString('name').trim();
+
+  const users = await loadJsonOrRemote(USERS_FILE, {});
+
+  if (!users[id]?.binders?.[name]) {
+    return i.reply({
+      content: `Binder **${name}** does not exist.`,
+      ephemeral: true
+    });
+  }
+
+  delete users[id].binders[name];
+
+  await saveJsonOrRemote(USERS_FILE, users);
+
+  return i.reply({
+    content: `Binder **${name}** was deleted.`
+  });
+    }
+    
     if (i.commandName === 'binder_edit') {
   const id = i.user.id;
   const name = i.options.getString('name').trim();
