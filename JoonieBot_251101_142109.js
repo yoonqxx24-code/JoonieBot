@@ -47,7 +47,7 @@ client.on(Events.InteractionCreate, async (i) => {
         id,
         name,
         coins: 0,
-        leaves: 0,
+        ivy: 0,
         created: new Date().toISOString(),
         lastDaily: null,
         lastWeekly: null,
@@ -65,13 +65,13 @@ client.on(Events.InteractionCreate, async (i) => {
     // /start
     if (i.commandName === 'start') {
       if (u && u.created) {
-        return i.reply({ embeds: [ruiEmbed('Profile already exists', `Oh! Seems like you already created a profile. Have fun playing.`)] });
+        return i.reply({ embeds: [ruiEmbed('Profile already exists', `Oh! Seems like you already created a profile.`)] });
       }
       users[id] = {
         id,
         name,
         coins: 0,
-        leaves: 0,
+        ivy: 0,
         created: new Date().toISOString(),
         lastDaily: null,
         lastWeekly: null,
@@ -88,10 +88,10 @@ client.on(Events.InteractionCreate, async (i) => {
       return i.reply({
         embeds: [ruiEmbed(
           `${name}'s Balance`,
-          `Here’s your current collector data. Keep playing to get more.`,
+          `Here’s your current collector data.`,
           [
             { name: '🪙 Coins', value: String(u.coins), inline: true },
-            { name: '🦋 Butterflies', value: String(u.butterflies), inline: true },
+            { name: '🌿 Ivy', value: String(u.ivy), inline: true },
             { name: '✨ Cards', value: String(myCards.length), inline: true }
           ]
         )]
@@ -109,18 +109,18 @@ client.on(Events.InteractionCreate, async (i) => {
       } 
 
       const coins = rand(200, 750);
-      const butterflies = rand(3, 20);
+      const ivy = rand(3, 20);
       u.coins += coins;
-      u.butterflies += butterflies;
+      u.ivy += ivy;
       u.lastDaily = new Date().toISOString();
       saveJson(USERS_FILE, users); 
 
       return i.reply({
-        embeds: [ruiEmbed('Daily collected', `${name}, here is what I found for you today.`, [
+        embeds: [ruiEmbed('Daily collected', `${name}, here is what you get.`, [
           { name: '🪙 Coins', value: `+${coins}`, inline: true },
-          { name: '🦋 Butterflies', value: `+${butterflies}`, inline: true },
+          { name: '🌿 Ivy', value: `+${ivy}`, inline: true },
           { name: '✨ Cards', value: 'No cards available yet', inline: false },
-          { name: 'New total', value: `${u.coins} 🪙 / ${u.butterflies} 🦋`, inline: false }
+          { name: 'New total', value: `${u.coins} 🪙 / u.ivy} 🌿`, inline: false }
         ])]
       });
     } 
@@ -137,18 +137,18 @@ client.on(Events.InteractionCreate, async (i) => {
       } 
 
       const coins = rand(900, 1800);
-      const butterflies = rand(10, 35);
+      const ivy = rand(10, 35);
       u.coins += coins;
-      u.butterflies += butterflies;
+      u.ivy += ivy;
       u.lastWeekly = new Date().toISOString();
       saveJson(USERS_FILE, users); 
 
       return i.reply({
         embeds: [ruiEmbed('Weekly collected', `Weekly rewards for ${name}.`, [
           { name: '🪙 Coins', value: `+${coins}`, inline: true },
-          { name: '🦋 Butterflies', value: `+${butterflies}`, inline: true },
+          { name: '🌿 Ivy', value: `+${ivy}`, inline: true },
           { name: '✨ Cards', value: 'No cards available yet', inline: false },
-          { name: 'New total', value: `${u.coins} 🪙 / ${u.butterflies} 🦋`, inline: false }
+          { name: 'New total', value: `${u.coins} 🪙 / ${u.butterfliu.ivy} 🌿`, inline: false }
         ])]
       });
     } 
@@ -165,18 +165,18 @@ client.on(Events.InteractionCreate, async (i) => {
       } 
 
       const coins = rand(2500, 5000);
-      const butterflies = rand(25, 70);
+      const ivy = rand(25, 70);
       u.coins += coins;
-      u.butterflies += butterflies;
+      u.ivy += ivy;
       u.lastMonthly = new Date().toISOString();
       saveJson(USERS_FILE, users); 
 
       return i.reply({
-        embeds: [ruiEmbed('Monthly collected', `Big drop for ${name}.`, [
+        embeds: [ruiEmbed('Monthly collected', `Drop for ${name}.`, [
           { name: '🪙 Coins', value: `+${coins}`, inline: true },
-          { name: '🦋 Butterflies', value: `+${butterflies}`, inline: true },
+          { name: '🌿 Ivy', value: `+${ivy}`, inline: true },
           { name: '✨ Cards', value: 'No cards available yet', inline: false },
-          { name: 'New total', value: `${u.coins} 🪙 / ${u.butterflies} 🦋`, inline: false }
+          { name: 'New total', value: `${u.coins} 🪙 / ${u.ivy} 🌿`, inline: false }
         ])]
       });
     } 
@@ -199,7 +199,7 @@ client.on(Events.InteractionCreate, async (i) => {
   } catch (err) {
     console.error(err);
     // show error in Discord so you see it
-    return i.reply({ embeds: [ruiEmbed('Error', 'Something went wrong in Rui. Check Termux for details.')] });
+    return i.reply({ embeds: [ruiEmbed('Error', 'Something went wrong with Joonie. Check Termux for details.')] });
   }
 }); 
 
