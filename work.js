@@ -26,9 +26,7 @@ module.exports = {
 
     fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
 
-    const messages = [
-      ``
-    ];
+    const WORK_MESSAGES = [
 
     const randomMsg = messages[Math.floor(Math.random() * messages.length)];
 
