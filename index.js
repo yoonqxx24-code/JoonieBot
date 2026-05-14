@@ -206,7 +206,23 @@ async function registerCommands() {
     new SlashCommandBuilder().setName('monthly').setDescription('Claim your monthly reward'),
     new SlashCommandBuilder().setName('drop').setDescription('Drop 3 random cards'),
     new SlashCommandBuilder().setName('work').setDescription('Help out bangtan to earn rewards'),
-    new SlashCommandBuilder().setName('inventory').setDescription('Show your collected cards'),
+    new SlashCommandBuilder().setName('inventory').setDescription('Show your collected cards')
+    .addStringOption(o =>
+       o.setName('group')
+   .setDescription('Filter by group')
+   .setRequired(false)
+)
+
+    .addStringOption(o =>
+       o.setName('idol')
+   .setDescription('Filter by idol')
+   .setRequired(false)
+)
+    .addStringOption(o =>
+  o.setName('era')
+   .setDescription('Filter by era/theme')
+   .setRequired(false)
+),
     new SlashCommandBuilder().setName('claim').setDescription('Claim a random card every 30 seconds'),
     new SlashCommandBuilder().setName('overview').setDescription('Show all commands'),
 
@@ -553,11 +569,14 @@ if (i.commandName === 'inventory') {
   const allUserCards = await loadJsonOrRemote(USER_CARDS_FILE, {});
 
   let myCards = Array.isArray(allUserCards[id]) ? allUserCards[id] : [];
+  const groupFilter = i.options.getString('group');
+const idolFilter = i.options.getString('idol');
 
   // 🔍 Entferne Kopien von Karten, die nicht mehr in "cards" existieren
   if (allCards.length) {
     const validIds = new Set(allCards.map(c => c.id));
     const filtered = myCards.filter(c => validIds.has(c.id));
+    const eraFilter = i.options.getString('era');
 
     // Wenn sich etwas geändert hat → aufräumen & speichern
     if (filtered.length !== myCards.length) {
@@ -567,6 +586,22 @@ if (i.commandName === 'inventory') {
 
     myCards = filtered;
   }
+if (groupFilter) {
+  myCards = myCards.filter(
+    c => c.group?.toLowerCase() === groupFilter.toLowerCase()
+  );
+}
+
+if (idolFilter) {
+  myCards = myCards.filter(
+    c => c.member?.toLowerCase() === idolFilter.toLowerCase()
+  );
+}
+if (eraFilter) {
+  myCards = myCards.filter(
+    c => c.era?.toLowerCase() === eraFilter.toLowerCase()
+  );
+}
 
   if (!myCards.length) {
     return i.reply({
