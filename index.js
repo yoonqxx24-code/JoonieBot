@@ -207,6 +207,24 @@ async function registerCommands() {
     new SlashCommandBuilder().setName('monthly').setDescription('Claim your monthly reward'),
     new SlashCommandBuilder().setName('drop').setDescription('Drop 3 random cards'),
     new SlashCommandBuilder()
+  .setName('binder_edit')
+  .setDescription('Edit an existing binder')
+  .addStringOption(o =>
+    o.setName('name')
+      .setDescription('Current binder name')
+      .setRequired(true)
+  )
+  .addStringOption(o =>
+    o.setName('new_name')
+      .setDescription('New binder name')
+      .setRequired(false)
+  )
+  .addStringOption(o =>
+    o.setName('cards')
+      .setDescription('New card IDs separated by commas')
+      .setRequired(false)
+  ),
+    new SlashCommandBuilder()
   .setName('binder_show')
   .setDescription('Show one of your binders as a 3x3 image')
   .addStringOption(o =>
@@ -778,6 +796,69 @@ cards.sort((a, b) => {
     content: `Binder **${name}** created with **${requestedIds.length}/9** cards.`
   });
   }
+    if (i.commandName === 'binder_edit') {
+  const id = i.user.id;
+  const name = i.options.getString('name').trim();
+  const newName = i.options.getString('new_name')?.trim();
+  const cardsInput = i.options.getString('cards');
+
+  const users = await loadJsonOrRemote(USERS_FILE, {});
+  const allCards = await loadJsonOrRemote(CARDS_FILE, []);
+  const allUserCards = await loadJsonOrRemote(USER_CARDS_FILE, {});
+
+  const binders = users[id]?.binders || {};
+
+  if (!binders[name]) {
+    return i.reply({ content: `Binder **${name}** does not exist.`, ephemeral: true });
+  }
+
+  let finalCards = binders[name];
+
+  if (cardsInput) {
+    const requestedIds = cardsInput.split(',').map(x => x.trim().toUpperCase()).filter(Boolean);
+
+    if (requestedIds.length > 9) {
+      return i.reply({ content: 'A binder can only hold up to **9 cards**.', ephemeral: true });
+    }
+
+    const existingCards = new Set(allCards.map(c => c.id?.toUpperCase()));
+    const invalidIds = requestedIds.filter(cardId => !existingCards.has(cardId));
+
+    if (invalidIds.length) {
+      return i.reply({ content: `These card IDs do not exist: **${invalidIds.join(', ')}**`, ephemeral: true });
+    }
+
+    const userCards = Array.isArray(allUserCards[id]) ? allUserCards[id] : [];
+    const ownedIds = new Set(userCards.map(c =>
+      typeof c === 'string' ? c.toUpperCase() : c.id?.toUpperCase()
+    ));
+
+    const notOwned = requestedIds.filter(cardId => !ownedIds.has(cardId));
+
+    if (notOwned.length) {
+      return i.reply({ content: `You can only add cards you own. Missing: **${notOwned.join(', ')}**`, ephemeral: true });
+    }
+
+    finalCards = requestedIds;
+  }
+
+  const finalName = newName || name;
+
+  if (newName && binders[finalName]) {
+    return i.reply({ content: `A binder named **${finalName}** already exists.`, ephemeral: true });
+  }
+
+  delete binders[name];
+  binders[finalName] = finalCards;
+  users[id].binders = binders;
+
+  await saveJsonOrRemote(USERS_FILE, users);
+
+  return i.reply({
+    content: `Binder updated: **${finalName}** — ${finalCards.length}/9 cards.`
+  });
+    }
+    
     if (i.commandName === 'binder_list') {
   const id = i.user.id;
   const users = await loadJsonOrRemote(USERS_FILE, {});
