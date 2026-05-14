@@ -714,7 +714,7 @@ const era = i.options.getString('era') || null;
 const version = i.options.getString('version') || null;
 let droppable = i.options.getBoolean('droppable');
 
-if (category === 'booster' || category === 'patreon') {
+if (category === 'booster' || category === 'custom' || category === 'patreon') {
   droppable = false;
 }
 
@@ -937,7 +937,7 @@ const chosen = pool[Math.floor(Math.random() * pool.length)];
 
   const category = card.category || 'regular';
 
-  if (category === 'booster' || category === 'patreon') {
+  if (category === 'booster' || category === 'custom' || category === 'patreon') {
     return false;
   }
 
