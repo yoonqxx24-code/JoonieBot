@@ -234,7 +234,7 @@ async function registerCommands() {
   ),
     new SlashCommandBuilder()
   .setName('binder_show')
-  .setDescription('Show one of your binders as a 3x3 image')
+  .setDescription('Show one of your binders')
   .addStringOption(o =>
     o.setName('name')
       .setDescription('Binder name')
@@ -242,7 +242,7 @@ async function registerCommands() {
   ),
     new SlashCommandBuilder()
   .setName('binder_add')
-  .setDescription('Create a binder with up to 9 owned cards')
+  .setDescription('Create a binder')
   .addStringOption(o =>
     o.setName('name')
       .setDescription('Binder name')
@@ -262,7 +262,7 @@ async function registerCommands() {
   o.setName('card_id')
     .setDescription('Search for a card')
     .setRequired(false)
-) 
+),
 .addStringOption(o =>
   o.setName('idol')
     .setDescription('Search by idol')
@@ -275,10 +275,10 @@ async function registerCommands() {
     o.setName('group').setDescription('Filter by group').setRequired(false)
   )
   .addStringOption(o =>
-    o.setName('idol').setDescription('Filter by idol/member').setRequired(false)
+    o.setName('idol').setDescription('Filter by idol').setRequired(false)
   )
   .addStringOption(o =>
-    o.setName('era').setDescription('Filter by era/theme').setRequired(false)
+    o.setName('era').setDescription('Filter by era/special').setRequired(false)
   )
   .addIntegerOption(o =>
     o.setName('page').setDescription('Page number').setRequired(false)
