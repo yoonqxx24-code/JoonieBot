@@ -545,21 +545,52 @@ if (i.commandName === 'progress') {
     cards = cards.filter(c => c.group?.toLowerCase() === groupFilter.toLowerCase());
   }
 
-  if (idolFilter) {
-    cards = cards.filter(c => c.member?.toLowerCase() === idolFilter.toLowerCase());
-  }
-
   if (eraFilter) {
     cards = cards.filter(c => c.era?.toLowerCase() === eraFilter.toLowerCase());
   }
+const rarityOrder = {
+  common: 1,
+  rare: 2,
+  super_rare: 3,
+  ultra_rare: 4,
+  legendary: 5
+};
 
-  if (!cards.length) {
-    return i.reply({
-      embeds: [ruiEmbed('No cards found', 'No cards match those filters.')],
-      ephemeral: true
-    });
+cards.sort((a, b) => {
+  const groupCompare = (a.group || "").localeCompare(b.group || "");
+  if (groupCompare !== 0) return groupCompare;
+
+  const memberCompare =
+    (memberOrder[a.member] || 999) - (memberOrder[b.member] || 999);
+  if (memberCompare !== 0) return memberCompare;
+
+  const specialTypes = [
+    'birthday',
+    'public',
+    'booster',
+    'patreon',
+    'limited',
+    'custom'
+  ];
+
+  const aSpecial = specialTypes.includes(a.rarity);
+  const bSpecial = specialTypes.includes(b.rarity);
+
+  // regular rarity sorting
+  if (!aSpecial && !bSpecial) {
+    const rarityCompare =
+      (rarityOrder[a.rarity] || 999) -
+      (rarityOrder[b.rarity] || 999);
+
+    if (rarityCompare !== 0) return rarityCompare;
   }
 
+  // special sorting by last numbers in ID
+  const aNum = parseInt(a.id.slice(-2)) || 0;
+  const bNum = parseInt(b.id.slice(-2)) || 0;
+
+  return aNum - bNum;
+});
   const userCards = Array.isArray(allUserCards[id]) ? allUserCards[id] : [];
   const ownedIds = new Set(userCards.map(c => typeof c === 'string' ? c : c.id));
 
