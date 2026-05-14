@@ -207,6 +207,14 @@ async function registerCommands() {
     new SlashCommandBuilder().setName('monthly').setDescription('Claim your monthly reward'),
     new SlashCommandBuilder().setName('drop').setDescription('Drop 3 random cards'),
     new SlashCommandBuilder()
+  .setName('binder_show')
+  .setDescription('Show one of your binders as a 3x3 image')
+  .addStringOption(o =>
+    o.setName('name')
+      .setDescription('Binder name')
+      .setRequired(true)
+  ),
+    new SlashCommandBuilder()
   .setName('binder_add')
   .setDescription('Create a binder with up to 9 owned cards')
   .addStringOption(o =>
@@ -792,6 +800,91 @@ cards.sort((a, b) => {
     embeds: [
       ruiEmbed('Your Binders', list)
     ]
+  });
+    }
+    if (i.commandName === 'binder_show') {
+  const id = i.user.id;
+  const name = i.options.getString('name').trim();
+
+  const users = await loadJsonOrRemote(USERS_FILE, {});
+  const allCards = await loadJsonOrRemote(CARDS_FILE, []);
+
+  const binder = users[id]?.binders?.[name];
+
+  if (!binder) {
+    return i.reply({
+      content: `Binder **${name}** does not exist.`,
+      ephemeral: true
+    });
+  }
+
+  const selectedCards = binder
+    .map(cardId => allCards.find(c => c.id?.toUpperCase() === cardId.toUpperCase()))
+    .filter(Boolean);
+
+  if (!selectedCards.length) {
+    return i.reply({
+      content: `Binder **${name}** has no valid cards.`,
+      ephemeral: true
+    });
+  }
+
+  const canvas = createCanvas(850, 1050);
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#1f1f23';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 42px Sans';
+  ctx.textAlign = 'center';
+  ctx.fillText(name, canvas.width / 2, 70);
+
+  ctx.font = '24px Sans';
+  ctx.fillText(`${selectedCards.length}/9 cards`, canvas.width / 2, 110);
+
+  const cardW = 210;
+  const cardH = 300;
+  const gapX = 35;
+  const gapY = 45;
+  const startX = 75;
+  const startY = 155;
+
+  for (let index = 0; index < selectedCards.length; index++) {
+    const card = selectedCards[index];
+    const col = index % 3;
+    const row = Math.floor(index / 3);
+
+    const x = startX + col * (cardW + gapX);
+    const y = startY + row * (cardH + gapY);
+
+    try {
+      const img = await loadImage(card.image);
+      ctx.drawImage(img, x, y, cardW, cardH);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 18px Sans';
+      ctx.textAlign = 'center';
+      ctx.fillText(card.id, x + cardW / 2, y + cardH + 25);
+    } catch (err) {
+      ctx.fillStyle = '#333333';
+      ctx.fillRect(x, y, cardW, cardH);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '18px Sans';
+      ctx.textAlign = 'center';
+      ctx.fillText('Image error', x + cardW / 2, y + cardH / 2);
+      ctx.fillText(card.id, x + cardW / 2, y + cardH + 25);
+    }
+  }
+
+  const attachment = new AttachmentBuilder(canvas.toBuffer(), {
+    name: 'binder.png'
+  });
+
+  return i.reply({
+    content: `Binder: **${name}**`,
+    files: [attachment]
   });
     }
     
