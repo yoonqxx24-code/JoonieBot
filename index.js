@@ -379,6 +379,19 @@ client.on(Events.InteractionCreate, async (i) => {
       const users = await loadJsonOrRemote(USERS_FILE, {});
       const id = i.user.id;
       const u = users[id];
+      const DROP_CLAIM_COOLDOWN = 20 * 1000;
+
+if (!u.lastDropClaim) u.lastDropClaim = 0;
+
+const claimLeft = DROP_CLAIM_COOLDOWN - (Date.now() - u.lastDropClaim);
+
+if (claimLeft > 0) {
+  const seconds = Math.ceil(claimLeft / 1000);
+  return i.reply({
+    content: `You can claim another drop card in **${seconds}s**.`,
+    ephemeral: true
+  });
+}
 
       if (!u || !u.pendingDrop) return i.reply({ content: 'You have no active drop.', ephemeral: true });
 
@@ -398,7 +411,7 @@ client.on(Events.InteractionCreate, async (i) => {
       if (!Array.isArray(allUserCards[id])) allUserCards[id] = [];
       allUserCards[id].push(chosen);
       await saveJsonOrRemote(USER_CARDS_FILE, allUserCards);
-
+u.lastDropClaim = Date.now();
       u.pendingDrop = null;
       u.lastDrop = new Date().toISOString();
       await saveJsonOrRemote(USERS_FILE, users);
