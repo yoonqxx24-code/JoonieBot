@@ -210,9 +210,25 @@ async function registerCommands() {
   .setName('search')
   .setDescription('Search for a card by ID')
   .addStringOption(o =>
-    o.setName('card_id')
-      .setDescription('Card ID')
-      .setRequired(true)
+  o.setName('card_id')
+    .setDescription('Search for a card')
+    .setRequired(false)
+)
+.addStringOption(o =>
+  o.setName('group')
+    .setDescription('Search by group')
+    .setRequired(false)
+)
+.addStringOption(o =>
+  o.setName('idol')
+    .setDescription('Search by idol')
+    .setRequired(false)
+)
+.addStringOption(o =>
+  o.setName('era')
+    .setDescription('Search by era')
+    .setRequired(false)
+)
   ),
     new SlashCommandBuilder()
   .setName('progress')
@@ -743,16 +759,34 @@ cards.sort((a, b) => {
 /* /search */
 if (i.commandName === 'search') {
   const cardIdInput = i.options.getString('card_id');
-  const cardId = cardIdInput.toUpperCase();
+  const groupFilter = i.options.getString('group');
+  const idolFilter = i.options.getString('idol');
+  const eraFilter = i.options.getString('era');
 
   const allCards = await loadJsonOrRemote(CARDS_FILE, []);
   const allUserCards = await loadJsonOrRemote(USER_CARDS_FILE, {});
 
-  const card = allCards.find(c => c.id?.toUpperCase() === cardId);
+  let results = allCards;
 
-  if (!card) {
+  if (cardIdInput) {
+    results = results.filter(c => c.id?.toUpperCase() === cardIdInput.toUpperCase());
+  }
+
+  if (groupFilter) {
+    results = results.filter(c => c.group?.toLowerCase() === groupFilter.toLowerCase());
+  }
+
+  if (idolFilter) {
+    results = results.filter(c => c.member?.toLowerCase() === idolFilter.toLowerCase());
+  }
+
+  if (eraFilter) {
+    results = results.filter(c => c.era?.toLowerCase() === eraFilter.toLowerCase());
+  }
+
+  if (!results.length) {
     return i.reply({
-      embeds: [ruiEmbed('Card not found', `No card with the ID **${cardId}** exists.`)],
+      embeds: [ruiEmbed('Card not found', 'No cards match that search.')],
       ephemeral: true
     });
   }
@@ -760,6 +794,8 @@ if (i.commandName === 'search') {
   const userCards = Array.isArray(allUserCards[id]) ? allUserCards[id] : [];
   const ownedIds = new Set(userCards.map(c => typeof c === 'string' ? c : c.id));
 
+  const page = 0;
+  const card = results[page];
   const ownsCard = ownedIds.has(card.id);
 
   const embed = new EmbedBuilder()
@@ -769,13 +805,33 @@ if (i.commandName === 'search') {
       `**Idol:** ${card.member || 'Unknown'}\n` +
       `**Era:** ${card.era || 'Unknown'}\n` +
       `**Rarity:** ${card.rarity || 'Unknown'}\n\n` +
-      `**Owned:** ${ownsCard ? 'Yes' : 'No'}`
+      `**Owned:** ${ownsCard ? 'Yes' : 'No'}\n` +
+      `**Result:** ${page + 1}/${results.length}`
     )
     .setColor(0xFFB6C1);
 
   if (card.image) embed.setImage(card.image);
 
-  return i.reply({ embeds: [embed] });
+  const row = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setCustomId(`search_prev_${id}_${page}`)
+      .setLabel('Previous')
+      .setStyle(ButtonStyle.Secondary)
+      .setDisabled(true),
+    new ButtonBuilder()
+      .setCustomId(`search_next_${id}_${page}`)
+      .setLabel('Next')
+      .setStyle(ButtonStyle.Secondary)
+      .setDisabled(results.length <= 1)
+  );
+
+  users[id].searchResults = results.map(c => c.id);
+  await saveJsonOrRemote(USERS_FILE, users);
+
+  return i.reply({
+    embeds: [embed],
+    components: [row]
+  });
 }
     /* /work */
     if (i.commandName === 'work') {
