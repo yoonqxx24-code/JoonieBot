@@ -10,6 +10,7 @@ const {
   Routes,
   SlashCommandBuilder,
   ActionRowBuilder,
+  AttachmentBuilder,
   ButtonBuilder,
   ButtonStyle
 } = require('discord.js');
@@ -201,11 +202,25 @@ async function registerCommands() {
     new SlashCommandBuilder().setName('ping').setDescription('Check if Namjoon is awake'),
     new SlashCommandBuilder().setName('start').setDescription('Create a profile'),
     new SlashCommandBuilder().setName('balance').setDescription('Show your coins, ivy and cards'),
-    
     new SlashCommandBuilder().setName('daily').setDescription('Claim your daily reward'),
     new SlashCommandBuilder().setName('weekly').setDescription('Claim your weekly reward'),
     new SlashCommandBuilder().setName('monthly').setDescription('Claim your monthly reward'),
     new SlashCommandBuilder().setName('drop').setDescription('Drop 3 random cards'),
+    new SlashCommandBuilder()
+  .setName('progress')
+  .setDescription('Show your collection progress')
+  .addStringOption(o =>
+    o.setName('group').setDescription('Filter by group').setRequired(false)
+  )
+  .addStringOption(o =>
+    o.setName('idol').setDescription('Filter by idol/member').setRequired(false)
+  )
+  .addStringOption(o =>
+    o.setName('era').setDescription('Filter by era/theme').setRequired(false)
+  )
+  .addIntegerOption(o =>
+    o.setName('page').setDescription('Page number').setRequired(false)
+  ),
     new SlashCommandBuilder().setName('work').setDescription('Help out bangtan to earn rewards'),
     new SlashCommandBuilder().setName('inventory').setDescription('Show your collected cards')
     .addStringOption(o =>
