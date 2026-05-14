@@ -176,7 +176,7 @@ function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + m
    {CATEGORY/RARITY}{GG}{II}V{V}{EE}
 ---------------------------------------------------- */
 
-const ID_REGEX = /^(?:C|R|S|U|L|HB|B|P|LE)[A-Z]{2}[A-Z]{2}V([1-9]\d*)(0[1-9]|[1-9]\d)$/;
+const ID_REGEX = /^(?:C|R|S|U|L|HB|B|P|LE|CC)[A-Z]{2}[A-Z]{2}V([1-9]\d*)(0[1-9]|[1-9]\d)$/;
 
 const rarityLetterMap = {
   common: 'C',
@@ -189,7 +189,8 @@ const rarityLetterMap = {
   public: 'PU',
   booster: 'B',
   patreon: 'P',
-  limited: 'LE'
+  limited: 'LE',
+  custom: 'CC'
 };
 
 /* ----------------------------------------------------
@@ -247,7 +248,9 @@ async function registerCommands() {
       { name: 'Public', value: 'public' },
       { name: 'Booster', value: 'booster' },
       { name: 'Patreon', value: 'patreon' },
-      { name: 'Limited', value: 'limited' }
+      { name: 'Limited', value: 'limited' },
+      { name: 'Custom', value: 'custom' }
+
     )
   )
   .addStringOption(o => o.setName('era').setDescription('Era name').setRequired(true))
@@ -284,9 +287,9 @@ async function registerCommands() {
 
     new SlashCommandBuilder()
       .setName('deletecard')
-      .setDescription('STAFF ONLY – delete a card completely')
+      .setDescription('delete a card completely')
       .addStringOption(o =>
-        o.setName('card_id').setDescription('Card ID (ALL CAPS)').setRequired(true)
+        o.setName('card_id').setDescription('Card ID').setRequired(true)
       )
   ].map(c => c.toJSON());
 
@@ -753,9 +756,12 @@ const expected = rarityLetterMap[rarity] || 'C';
 
 const prefix =
   cardId.startsWith('HB') ? 'HB' :
+  cardId.startsWith('PU') ? 'PU' :
   cardId.startsWith('LE') ? 'LE' :
   cardId.startsWith('B') ? 'B' :
   cardId.startsWith('P') ? 'P' :
+  cardId.startsWith('CC') ? 'CC' :
+
   cardId.charAt(0);
 
 if (prefix !== expected) {
