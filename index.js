@@ -1404,7 +1404,25 @@ const price = RARITY_PRICES[rarity];
         allUserCards[targetUser.id] = receiverCards;
         await saveJsonOrRemote(USER_CARDS_FILE, allUserCards);
 
-        return i.reply({ embeds: [ruiEmbed('Card sent', `${name} sent **${cardToSend.id}** (${cardToSend.group} — ${cardToSend.member}) to ${targetUser.username}.`)] });
+        const remainingCopies = senderCards.filter(c => c.id === cardToSend.id).length;
+
+const giftEmbed = new EmbedBuilder()
+  .setColor(0xFFB6C1)
+  .setAuthor({
+    name: name,
+    iconURL: i.user.displayAvatarURL()
+  })
+  .setDescription(
+`${targetUser} has received your gift! ${CARD_EMOJI}
+
+${CLAIM_EMOJI} Given 1x ${cardToSend.group} ${cardToSend.member} (${cardToSend.era || 'No Era'}) | ${cardToSend.id}
+
+${getRarityStars(cardToSend.rarity)}
+
+Copies left: ${remainingCopies}`
+  );
+
+return i.reply({ embeds: [giftEmbed] });
       }
 
       return i.reply({ embeds: [ruiEmbed('Unknown thing', 'You can gift `coins` `ivy` or `card`.')] });
