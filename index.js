@@ -511,13 +511,48 @@ if (claimLeft > 0) {
   });
 }
 
-      if (!u || !u.pendingDrop) return i.reply({ content: 'You have no active drop.', ephemeral: true });
-
-      const now = Date.now();
       if (u.pendingDrop.expiresAt && now > u.pendingDrop.expiresAt) {
-        delete u.pendingDrop;
-        await saveJsonOrRemote(USERS_FILE, users);
-        return i.reply({ content: 'Your drop expired. Use /drop again.', ephemeral: true });
+
+  const cards = u.pendingDrop.cards || [];
+  const allUserCards = await loadJsonOrRemote(USER_CARDS_FILE, {});
+
+  const results = await Promise.all(cards.map(async (card, index) => {
+
+    let claimer = 'Nobody claimed this card';
+    let copies = 0;
+
+    if (card.claimedBy) {
+
+      try {
+        const member = await i.guild.members.fetch(card.claimedBy);
+        claimer = `${member}`;
+
+      } catch {
+        claimer = `<@${card.claimedBy}>`;
+      }
+
+      const userCards = allUserCards[card.claimedBy] || [];
+
+      copies = userCards.filter(c => c.id === card.id).length;
+    }
+
+    return `**Card #${index + 1} (${card.id})**\n` +
+    `${CARD_EMOJI} ${card.group} ${card.member} (${card.era || 'No Era'})\n` +
+    `${getRarityStars(card.rarity)}\n\n` +
+    `${claimer}\n` +
+    `Copies: ${copies}`;
+  }));
+
+  const resultEmbed = new EmbedBuilder()
+    .setTitle('Results of the drop!')
+    .setDescription(results.join('\n\n'))
+    .setColor(0xFFB6C1);
+
+  delete u.pendingDrop;
+
+  await saveJsonOrRemote(USERS_FILE, users);
+
+  return i.channel.send({ embeds: [resultEmbed] });
       }
 
       const idx = parseInt(i.customId.split('_').pop(), 10);
