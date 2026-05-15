@@ -367,6 +367,34 @@ const staffCommands = [
       { name: 'legendary', value: 'legendary' }
     )
   ),
+  new SlashCommandBuilder()
+  .setName('staff_gift')
+  .setDescription('Staff gift coins, ivy, or cards')
+  .addUserOption(o =>
+    o.setName('target')
+      .setDescription('Who should receive the gift?')
+      .setRequired(true)
+  )
+  .addStringOption(o =>
+    o.setName('type')
+      .setDescription('What do you want to gift?')
+      .setRequired(true)
+      .addChoices(
+        { name: 'Coins', value: 'coins' },
+        { name: 'Ivy', value: 'ivy' },
+        { name: 'Card', value: 'card' }
+      )
+  )
+  .addIntegerOption(o =>
+    o.setName('amount')
+      .setDescription('Amount for coins/ivy')
+      .setRequired(false)
+  )
+  .addStringOption(o =>
+  o.setName('card_ids')
+    .setDescription('Card IDs separated by commas')
+    .setRequired(false)
+),
     // neue Staff-Commands
     new SlashCommandBuilder()
       .setName('editcard_dropon')
@@ -1413,7 +1441,64 @@ if (prefix !== expected) {
         `New card was added.\nID: **${cardId}**\nGroup: **${group}**\nIdol: **${idol}**\nRarity: **${rarity}**\nType: **${ctype}**\nDroppable: **${droppable ? 'yes' : 'no'}**\nEra: **${era || '—'}**\nVersion: **${version || '—'}**`
       )] });
     
+if (i.commandName === 'staff_gift') {
+  if (!i.member.roles.cache.has(STAFF_ROLE_ID)) {
+    return i.reply({
+      content: 'This command is for Head Staff only.',
+      ephemeral: true
+    });
+  }
 
+  const target = i.options.getUser('target');
+  const giftType = i.options.getString('type');
+  const amount = i.options.getInteger('amount');
+  const cardIdInput = i.options.getString('card_ids');
+
+  const users = await loadJsonOrRemote(USERS_FILE, {});
+  const allCards = await loadJsonOrRemote(CARDS_FILE, []);
+  const allUserCards = await loadJsonOrRemote(USER_CARDS_FILE, {});
+
+  if (!users[target.id]) {
+    users[target.id] = {
+      id: target.id,
+      name: target.username,
+      coins: 0,
+      ivy: 0,
+      created: new Date().toISOString(),
+      lastDaily: null,
+      lastWeekly: null,
+      lastMonthly: null,
+      lastWork: null,
+      lastDrop: null,
+      pendingDrop: null,
+      lastClaim: null,
+      lastDropClaim: null
+    };
+  }
+
+  if (!Array.isArray(allUserCards[target.id])) {
+    allUserCards[target.id] = [];
+  }
+
+  if (giftType === 'coins' || giftType === 'ivy') {
+    if (!amount || amount <= 0) {
+      return i.reply({
+        content: 'Please enter a valid positive amount.',
+        ephemeral: true
+      });
+    }
+
+    users[target.id][giftType] = (users[target.id][giftType] || 0) + amount;
+
+    await saveJsonOrRemote(USERS_FILE, users);
+
+    return i.reply({
+      content: `Gifted **${amount} ${giftType}** to **${target.username}**.`
+    });
+  }
+
+  
+}
     /* /editcard_dropon (STAFF) */
     if (i.commandName === 'editcard_dropon') {
       const staffEnv = process.env.STAFF_IDS || '';
@@ -1443,6 +1528,68 @@ if (prefix !== expected) {
       return i.reply({
         embeds: [ruiEmbed('Updated', `Card **${cardId}** is now **droppable**.`)]
       });
+      if (giftType === 'card') {
+  if (!cardIdsInput) {
+    return i.reply({
+      content: 'Please enter card IDs.',
+      ephemeral: true
+    });
+  }
+
+  const cardIds = cardIdsInput
+    .split(',')
+    .map(x => x.trim().toUpperCase())
+    .filter(Boolean);
+
+  const gifted = [];
+  const missing = [];
+  const outOfStock = [];
+
+  for (const cardId of cardIds) {
+    const card = allCards.find(c => c.id?.toUpperCase() === cardId);
+
+    if (!card) {
+      missing.push(cardId);
+      continue;
+    }
+
+    // ONLY limit actual limited cards
+    if (card.type === 'limited') {
+      const maxStock = card.stock ?? 1;
+
+      const alreadyGifted = Object.values(allUserCards)
+        .flat()
+        .filter(c => {
+          const ownedId = typeof c === 'string' ? c : c.id;
+          return ownedId?.toUpperCase() === cardId;
+        }).length;
+
+      if (alreadyGifted >= maxStock) {
+        outOfStock.push(`${cardId} (${alreadyGifted}/${maxStock})`);
+        continue;
+      }
+    }
+
+    allUserCards[target.id].push(card);
+    gifted.push(card.id);
+  }
+
+  await saveJsonOrRemote(USER_CARDS_FILE, allUserCards);
+
+  return i.reply({
+    content:
+      `Gifted **${gifted.length}** card(s) to **${target.username}**.\n` +
+      (gifted.length
+        ? `Cards: **${gifted.join(', ')}**\n`
+        : '') +
+      (missing.length
+        ? `Not found: **${missing.join(', ')}**\n`
+        : '') +
+      (outOfStock.length
+        ? `Out of stock: **${outOfStock.join(', ')}**`
+        : '')
+  });
+      }
     }
 
     /* /editcard_dropoff (STAFF) */
