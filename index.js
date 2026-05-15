@@ -310,7 +310,35 @@ async function registerCommands() {
       .setDescription('Buy a card')
       .addStringOption(o =>
         o.setName('card_id').setDescription('Card code').setRequired(true)
-      ),
+      ), 
+    new SlashCommandBuilder()
+  .setName('staff_gift')
+  .setDescription('Staff gift coins, ivy, or cards')
+  .addUserOption(o =>
+    o.setName('target')
+      .setDescription('Who should receive the gift?')
+      .setRequired(true)
+  )
+  .addStringOption(o =>
+    o.setName('type')
+      .setDescription('What do you want to gift?')
+      .setRequired(true)
+      .addChoices(
+        { name: 'Coins', value: 'coins' },
+        { name: 'Ivy', value: 'ivy' },
+        { name: 'Card', value: 'card' }
+      )
+  )
+  .addIntegerOption(o =>
+    o.setName('amount')
+      .setDescription('Amount for coins/ivy')
+      .setRequired(false)
+  )
+  .addStringOption(o =>
+  o.setName('card_ids')
+    .setDescription('Card IDs separated by commas')
+    .setRequired(false)
+),
 
     new SlashCommandBuilder()
       .setName('gift')
@@ -367,34 +395,7 @@ const staffCommands = [
       { name: 'legendary', value: 'legendary' }
     )
   ),
-  new SlashCommandBuilder()
-  .setName('staff_gift')
-  .setDescription('Staff gift coins, ivy, or cards')
-  .addUserOption(o =>
-    o.setName('target')
-      .setDescription('Who should receive the gift?')
-      .setRequired(true)
-  )
-  .addStringOption(o =>
-    o.setName('type')
-      .setDescription('What do you want to gift?')
-      .setRequired(true)
-      .addChoices(
-        { name: 'Coins', value: 'coins' },
-        { name: 'Ivy', value: 'ivy' },
-        { name: 'Card', value: 'card' }
-      )
-  )
-  .addIntegerOption(o =>
-    o.setName('amount')
-      .setDescription('Amount for coins/ivy')
-      .setRequired(false)
-  )
-  .addStringOption(o =>
-  o.setName('card_ids')
-    .setDescription('Card IDs separated by commas')
-    .setRequired(false)
-),
+  
     // neue Staff-Commands
     new SlashCommandBuilder()
       .setName('editcard_dropon')
