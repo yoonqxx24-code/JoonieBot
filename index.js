@@ -19,6 +19,30 @@ const axios = require('axios');
 const STAFF_SERVER_ROLE_ID = process.env.STAFF_SERVER_ROLE_ID;
 const MAIN_SERVER_ROLE_ID = process.env.MAIN_SERVER_ROLE_ID;
 
+const CARD_EMOJI = '\<:joonie:1504887066347962529>';
+const GIFT_EMOJI = '\<:joonie2:1504887194928681110>';
+
+function getRarityStars(rarity) {
+  switch (rarity?.toLowerCase()) {
+    case 'common':
+      return '☆☆☆☆☆';
+    case 'rare':
+      return '★☆☆☆☆';
+    case 'super_rare':
+      return '★★☆☆☆';
+    case 'ultra_rare':
+      return '★★★☆☆';
+    case 'legendary':
+      return '★★★★★';
+    case 'public':
+      return '★★★★★';
+    case 'limited':
+      return '★★★★★';
+    default:
+      return '☆☆☆☆☆';
+  }
+}
+
 // === HELPER: createDropCollage ===
 async function createDropCollage(cards) {
   const width = 1100;
@@ -501,14 +525,23 @@ if (claimLeft > 0) {
       if (!cards[idx]) return i.reply({ content: 'This card is not available anymore.', ephemeral: true });
 
       const chosen = cards[idx];
+      if (chosen.claimedBy) {
+  return i.reply({
+    content: 'This card has already been claimed.',
+    ephemeral: true
+  });
+      }
       const allUserCards = await loadJsonOrRemote(USER_CARDS_FILE, {});
       if (!Array.isArray(allUserCards[id])) allUserCards[id] = [];
       allUserCards[id].push(chosen);
       await saveJsonOrRemote(USER_CARDS_FILE, allUserCards);
+chosen.claimedBy = i.user.id;
+chosen.claimedName = i.user.username;
+chosen.copies = getCardCopies(allUserCards[id], chosen.id);
+
 u.lastDropClaim = Date.now();
-      u.pendingDrop = null;
-      u.lastDrop = new Date().toISOString();
-      await saveJsonOrRemote(USERS_FILE, users);
+
+await saveJsonOrRemote(USERS_FILE, users);
 
       const embed = new EmbedBuilder()
         .setTitle('Card claimed')
