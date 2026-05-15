@@ -1302,9 +1302,9 @@ const inventoryText = shownCards.map((card, idx) => {
 
   return (
     `**${number}. ${card.member || 'Unknown'} (${card.era || 'No Era'})**\n` +
-    `${CARD_EMOJI} **Group:** ${card.group || 'Unknown'}\n` +
-    `${CLAIM_EMOJI} **Copies:** ${getCardCopies(myCards, card.id)}\n` +
-    `🌼 **Card ID:** ${card.id}\n` +
+    `📖 **Group:** ${card.group || 'Unknown'}\n` +
+    `🌱 **Copies:** ${getCardCopies(myCards, card.id)}\n` +
+    `🖼 **Card ID:** ${card.id}\n` +
     `(${getRarityStars(card.rarity)})`
   );
 }).join('\n\n');
