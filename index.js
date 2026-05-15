@@ -1550,35 +1550,18 @@ if (i.commandName === 'staff_gift') {
   for (const cardId of cardIds) {
     const card = allCards.find(c => c.id?.toUpperCase() === cardId);
 
-    if (!card) {
-      missing.push(cardId);
-      continue;
-    }
-
-    // ONLY limit actual limited cards
-    if (card.type === 'limited') {
-      const maxStock = card.stock ?? 1;
-
-      const alreadyGifted = Object.values(allUserCards)
-        .flat()
-        .filter(c => {
-          const ownedId = typeof c === 'string' ? c : c.id;
-          return ownedId?.toUpperCase() === cardId;
-        }).length;
-
-      if (alreadyGifted >= maxStock) {
-        outOfStock.push(`${cardId} (${alreadyGifted}/${maxStock})`);
-        continue;
-      }
-    }
-
-    allUserCards[target.id].push(card);
-    gifted.push(card.id);
+  if (!card) {
+    missing.push(cardId);
+    continue;
   }
 
-  await saveJsonOrRemote(USER_CARDS_FILE, allUserCards);
+  allUserCards[target.id].push(card);
+  gifted.push(card.id);
+}
 
-  return i.reply({
+await saveJsonOrRemote(USER_CARDS_FILE, allUserCards);
+
+return i.reply({
     content:
       `Gifted **${gifted.length}** card(s) to **${target.username}**.\n` +
       (gifted.length
