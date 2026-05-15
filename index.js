@@ -1292,18 +1292,36 @@ if (eraFilter) {
     });
   }
 
-  const firstTen = myCards.slice(0, 10);
-  return i.reply({
-    embeds: [ruiEmbed(
-      `${name}'s Inventory`,
-      `You currently own **${myCards.length}** card(s). Showing first ${firstTen.length}:`,
-      firstTen.map((c, idx) => ({
-        name: `#${idx + 1} • ${c.group} — ${c.member}`,
-        value: `ID: ${c.id} • Rarity: **${c.rarity || 'unknown'}**`,
-        inline: false
-      }))
-    )]
-  });
+  const perPage = 5;
+const page = 1;
+
+const shownCards = myCards.slice(0, perPage);
+
+const inventoryText = shownCards.map((card, idx) => {
+  const number = idx + 1;
+
+  return (
+    `**${number}. ${card.member || 'Unknown'} (${card.era || 'No Era'})**\n` +
+    `${CARD_EMOJI} **Group:** ${card.group || 'Unknown'}\n` +
+    `${CLAIM_EMOJI} **Copies:** ${getCardCopies(myCards, card.id)}\n` +
+    `🌼 **Card ID:** ${card.id}\n` +
+    `(${getRarityStars(card.rarity)})`
+  );
+}).join('\n\n');
+
+const embed = new EmbedBuilder()
+  .setColor(0xFFB6C1)
+  .setAuthor({
+    name: name,
+    iconURL: i.user.displayAvatarURL()
+  })
+  .setTitle(`${name}'s Inventory...`)
+  .setDescription(
+    inventoryText +
+    `\n\nCards in your binders won't be shown in your inventory.`
+  );
+
+return i.reply({ embeds: [embed] });
 }
 
     /* /buy */
