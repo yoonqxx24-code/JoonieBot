@@ -546,7 +546,7 @@ if (claimLeft > 0) {
   const resultEmbed = new EmbedBuilder()
     .setTitle('Results of the drop!')
     .setDescription(results.join('\n\n'))
-    .setColor(0xFFB6C1);
+    .setColor('#C8BBA8');
 
   delete u.pendingDrop;
 
@@ -581,7 +581,7 @@ await saveJsonOrRemote(USERS_FILE, users);
       const embed = new EmbedBuilder()
         .setTitle('Card claimed')
         .setDescription(`You claimed **${chosen.id}** (${chosen.group} — ${chosen.member}) • **${chosen.rarity}**`)
-        .setColor(0xFFB6C1);
+        .setColor('#C8BBA8');
       if (chosen.image) embed.setImage(chosen.image);
 
       return i.reply({ embeds: [embed], ephemeral: true });
@@ -1197,7 +1197,7 @@ if (i.commandName === 'search') {
       `**Owned:** ${ownsCard ? 'Yes' : 'No'}\n` +
       `**Result:** ${page + 1}/${results.length}`
     )
-    .setColor(0xFFB6C1);
+    .setColor('#C8BBA8');
 
   if (card.image) embed.setImage(card.image);
 
@@ -1310,7 +1310,7 @@ const inventoryText = shownCards.map((card, idx) => {
 }).join('\n\n');
 
 const embed = new EmbedBuilder()
-  .setColor(0xFFB6C1)
+  .setColor('#C8BBA8')
   .setAuthor({
     name: name,
     iconURL: i.user.displayAvatarURL()
@@ -1425,7 +1425,7 @@ const price = RARITY_PRICES[rarity];
         const remainingCopies = senderCards.filter(c => c.id === cardToSend.id).length;
 
 const giftEmbed = new EmbedBuilder()
-  .setColor(0xFFB6C1)
+  .setColor('#C8BBA8')
   .setAuthor({
     name: name,
     iconURL: i.user.displayAvatarURL()
@@ -1778,7 +1778,7 @@ const chosen = pool[Math.floor(Math.random() * pool.length)];
       const embed = new EmbedBuilder()
         .setTitle('Card claimed')
         .setDescription(`You got **${chosen.id}** (${chosen.group} — ${chosen.member}) • **${chosen.rarity?.toUpperCase() || 'UNKNOWN'}**!`)
-        .setColor(0xFFB6C1);
+        .setColor('#C8BBA8');
       if (chosen.image) embed.setImage(chosen.image);
 
       return i.reply({ embeds: [embed] });
