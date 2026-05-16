@@ -25,13 +25,13 @@ const GIFT_EMOJI = '\<:joonie2:1504887194928681110>';
 function getRarityStars(rarity) {
   switch (rarity?.toLowerCase()) {
     case 'common':
-      return '☆☆☆☆☆';
-    case 'rare':
       return '★☆☆☆☆';
-    case 'super_rare':
+    case 'rare':
       return '★★☆☆☆';
-    case 'ultra_rare':
+    case 'super_rare':
       return '★★★☆☆';
+    case 'ultra_rare':
+      return '★★★★☆';
     case 'legendary':
       return '★★★★★';
     case 'public':
