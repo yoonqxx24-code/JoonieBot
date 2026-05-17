@@ -192,7 +192,7 @@ function pickRarityWithBoost(baseWeights, boostName = null) {
    Helpers
 ---------------------------------------------------- */
 function ruiEmbed(title, desc, fields = []) {
-  const e = new EmbedBuilder().setTitle(title).setDescription(desc).setColor(0xFFB6C1);
+  const e = new EmbedBuilder().setTitle(title).setDescription(desc).setColor('#C8BBA8');
   if (fields.length) e.addFields(...fields);
   return e;
 }
