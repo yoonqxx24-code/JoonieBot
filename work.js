@@ -50,7 +50,7 @@ module.exports = {
 const randomMsg = WORK_MESSAGES[Math.floor(Math.random() * WORK_MESSAGES.length)];
 
     const embed = new EmbedBuilder()
-      .setColor(0xFFC0CB)
+      .setColor('#C8BBA8')
       .setTitle('Work Completed!')
       .setDescription(randomMsg)
       .setFooter({ text: 'Work hard, dream big' });
