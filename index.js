@@ -907,7 +907,7 @@ if (i.commandName === 'mines') {
             { name: '/binder_list', value: 'Show your binders in a list'},
             { name: '/binder_show', value: 'Show your binder'},
             { name: '/binder_edit', value: 'Rename or change cards in a binder'},
-            { name: '/binder_delete', value: 'Delete one of your binders'}
+            { name: '/binder_delete', value: 'Delete one of your binders'},
             { name: '/mines', value:'play Minesweeper'}
           ]
         )],
