@@ -1730,7 +1730,7 @@ if (prefix !== expected) {
     )],
     ephemeral: true
   });
-}}
+}
       const cards = await loadJsonOrRemote(CARDS_FILE, []);
       if (cards.find(c => c.id === cardId)) {
         return i.reply({ embeds: [ruiEmbed('Already exists', `There is already a card with ID **${cardId}**.`)], ephemeral: true });
@@ -1753,7 +1753,7 @@ if (prefix !== expected) {
       return i.reply({ embeds: [ruiEmbed('Card created',
         `New card was added.\nID: **${cardId}**\nGroup: **${group}**\nIdol: **${idol}**\nRarity: **${rarity}**\nType: **${ctype}**\nDroppable: **${droppable ? 'yes' : 'no'}**\nEra: **${era || '—'}**\nVersion: **${version || '—'}**`
       )] });
-    
+    }
 if (i.commandName === 'staff_gift') {
   if (!i.member.roles.cache.has(STAFF_ROLE_ID)) {
     return i.reply({
