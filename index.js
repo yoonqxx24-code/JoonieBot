@@ -677,6 +677,73 @@ function buildButtons(game) {
 client.on(Events.InteractionCreate, async (i) => {
   // ---------- BUTTONS ----------
   if (i.isButton()) {
+    if (i.customId.startsWith('mine_')) {
+
+    const game = minesGames.get(i.message.id);
+
+    if (!game) {
+        return i.reply({
+            content: 'This game no longer exists.',
+            ephemeral: true
+        });
+    }
+
+    if (i.user.id !== game.owner) {
+        return i.reply({
+            content: 'This is not your game.',
+            ephemeral: true
+        });
+    }
+
+    const parts = i.customId.split('_');
+const x = Number(parts[1]);
+const y = Number(parts[2]);
+    const tile = game.board[y][x];
+
+    if (tile.mine) {
+
+        tile.revealed = true;
+        tile.exploded = true;
+        game.gameOver = true;
+
+        for (const row of game.board) {
+            for (const t of row) {
+                if (t.mine) t.revealed = true;
+            }
+        }
+
+    } else {
+
+        revealTiles(game, x, y);
+
+        if (game.safeLeft === 0) {
+            game.gameOver = true;
+        }
+
+    }
+
+    const embed = new EmbedBuilder()
+        .setColor('#C8BBA8')
+        .setTitle('💣 Minesweeper')
+        .setDescription(
+            game.gameOver
+                ? (tile.mine
+                    ? '💥 You hit a mine!'
+                    : '🎉 You cleared the board!')
+                : `Safe tiles left: **${game.safeLeft}**`
+        );
+
+    await i.update({
+        embeds: [embed],
+        components: buildButtons(game)
+    });
+
+    if (game.gameOver) {
+        minesGames.delete(i.message.id);
+    }
+
+    return;
+    }
     if (i.customId.startsWith('drop_pick_')) {
       const users = await loadJsonOrRemote(USERS_FILE, {});
       const id = i.user.id;
