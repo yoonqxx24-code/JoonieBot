@@ -795,7 +795,30 @@ await saveJsonOrRemote(USERS_FILE, users);
     if (i.commandName === 'ping') {
       return i.reply({ embeds: [ruiEmbed('Pong', 'Joonie is awake.')] });
     }
+if (i.commandName === 'mines') {
 
+    const game = createBoard();
+
+    const embed = new EmbedBuilder()
+        .setColor(0xC8BBA8)
+        .setTitle('💣 Minesweeper')
+        .setDescription(`Safe tiles left: **${game.safeLeft}**`);
+
+    await i.reply({
+        embeds: [embed],
+        components: buildButtons(game)
+    });
+
+    const message = await i.fetchReply();
+
+    minesGames.set(message.id, {
+        owner: i.user.id,
+        ...game
+    });
+
+    return;
+
+}
     /* /overview */
     if (i.commandName === 'overview') {
       return i.reply({
