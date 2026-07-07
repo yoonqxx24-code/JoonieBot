@@ -729,7 +729,7 @@ const y = Number(parts[2]);
             game.gameOver
                 ? (tile.mine
                     ? 'Boom! welp try again :^!'
-                    : 'Yay u survived)
+                    : 'Yay u survived')
                 : `Safe tiles left: **${game.safeLeft}**`
         );
 
