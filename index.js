@@ -14,6 +14,7 @@ const {
   ButtonBuilder,
   ButtonStyle
 } = require('discord.js');
+const minesGames = new Map();
 const { createCanvas, loadImage } = require('canvas');
 const axios = require('axios');
 const STAFF_SERVER_ROLE_ID = process.env.STAFF_SERVER_ROLE_ID;
@@ -232,6 +233,9 @@ async function registerCommands() {
     new SlashCommandBuilder().setName('weekly').setDescription('Claim your weekly reward'),
     new SlashCommandBuilder().setName('monthly').setDescription('Claim your monthly reward'),
     new SlashCommandBuilder().setName('drop').setDescription('Drop 3 random cards'),
+    new SlashCommandBuilder()
+    .setName('mines')
+    .setDescription('Play a game of Minesweeper.'),
     new SlashCommandBuilder()
   .setName('binder_delete')
   .setDescription('Delete one of your binders')
@@ -490,6 +494,186 @@ client.once(Events.ClientReady, async (c) => {
 /* ----------------------------------------------------
    Interaction handler
 ---------------------------------------------------- */
+function createBoard(size = 5, mines = 5) {
+
+    const board = [];
+
+    for (let y = 0; y < size; y++) {
+
+        board[y] = [];
+
+        for (let x = 0; x < size; x++) {
+
+            board[y][x] = {
+                mine: false,
+                revealed: false,
+                number: 0,
+                exploded: false
+            };
+
+        }
+
+    }
+
+    let placed = 0;
+
+    while (placed < mines) {
+
+        const x = Math.floor(Math.random() * size);
+        const y = Math.floor(Math.random() * size);
+
+        if (!board[y][x].mine) {
+
+            board[y][x].mine = true;
+            placed++;
+
+        }
+
+    }
+
+    for (let y = 0; y < size; y++) {
+
+        for (let x = 0; x < size; x++) {
+
+            if (board[y][x].mine) continue;
+
+            let count = 0;
+
+            for (let yy = -1; yy <= 1; yy++) {
+
+                for (let xx = -1; xx <= 1; xx++) {
+
+                    const nx = x + xx;
+                    const ny = y + yy;
+
+                    if (
+                        nx >= 0 &&
+                        ny >= 0 &&
+                        nx < size &&
+                        ny < size &&
+                        board[ny][nx].mine
+                    ) {
+                        count++;
+                    }
+
+                }
+
+            }
+
+            board[y][x].number = count;
+
+        }
+
+    }
+
+    return {
+
+        board,
+        size,
+        mines,
+        safeLeft: size * size - mines,
+        gameOver: false
+
+    };
+
+}
+function revealTiles(game, x, y) {
+
+    if (
+        x < 0 ||
+        y < 0 ||
+        x >= game.size ||
+        y >= game.size
+    ) return;
+
+    const tile = game.board[y][x];
+
+    if (tile.revealed || tile.mine)
+        return;
+
+    tile.revealed = true;
+    game.safeLeft--;
+
+    if (tile.number !== 0)
+        return;
+
+    revealTiles(game, x - 1, y);
+    revealTiles(game, x + 1, y);
+    revealTiles(game, x, y - 1);
+    revealTiles(game, x, y + 1);
+
+    revealTiles(game, x - 1, y - 1);
+    revealTiles(game, x + 1, y - 1);
+    revealTiles(game, x - 1, y + 1);
+    revealTiles(game, x + 1, y + 1);
+
+}
+function buildButtons(game) {
+
+    const rows = [];
+
+    const numberEmoji = {
+        1: "1️⃣",
+        2: "2️⃣",
+        3: "3️⃣",
+        4: "4️⃣",
+        5: "5️⃣",
+        6: "6️⃣",
+        7: "7️⃣",
+        8: "8️⃣"
+    };
+
+    for (let y = 0; y < game.size; y++) {
+
+        const row = new ActionRowBuilder();
+
+        for (let x = 0; x < game.size; x++) {
+
+            const tile = game.board[y][x];
+
+            let emoji = "⬜";
+            let style = ButtonStyle.Secondary;
+
+            if (tile.revealed) {
+
+                if (tile.mine) {
+
+                    emoji = tile.exploded ? "💥" : "💣";
+                    style = ButtonStyle.Danger;
+
+                } else if (tile.number === 0) {
+
+                    emoji = "⬛";
+                    style = ButtonStyle.Secondary;
+
+                } else {
+
+                    emoji = numberEmoji[tile.number];
+                    style = ButtonStyle.Primary;
+
+                }
+
+            }
+
+            row.addComponents(
+
+                new ButtonBuilder()
+                    .setCustomId(`mine_${x}_${y}`)
+                    .setEmoji(emoji)
+                    .setStyle(style)
+                    .setDisabled(game.gameOver || tile.revealed)
+
+            );
+
+        }
+
+        rows.push(row);
+
+    }
+
+    return rows;
+
+}
 client.on(Events.InteractionCreate, async (i) => {
   // ---------- BUTTONS ----------
   if (i.isButton()) {
