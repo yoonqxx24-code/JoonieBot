@@ -728,8 +728,8 @@ const y = Number(parts[2]);
         .setDescription(
             game.gameOver
                 ? (tile.mine
-                    ? '💥 You hit a mine!'
-                    : '🎉 You cleared the board!')
+                    ? 'Boom! welp try again :^!'
+                    : 'Yay u survived)
                 : `Safe tiles left: **${game.safeLeft}**`
         );
 
@@ -908,6 +908,7 @@ if (i.commandName === 'mines') {
             { name: '/binder_show', value: 'Show your binder'},
             { name: '/binder_edit', value: 'Rename or change cards in a binder'},
             { name: '/binder_delete', value: 'Delete one of your binders'}
+            { name: '/mines', value:'play Minesweeper'}
           ]
         )],
         ephemeral: true
